@@ -2,7 +2,7 @@ from datetime import datetime
 
 from uuid import uuid4
 from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -31,6 +31,12 @@ class User(Base):
         Boolean,
         default=False,
     )
+
+    courses = relationship(
+        "Course",
+        back_populates="instructor",
+    )
+
     refresh_token: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,

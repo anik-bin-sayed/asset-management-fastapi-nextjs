@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import datetime, UTC
 
 from sqlalchemy import String, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -31,6 +31,11 @@ class Category(Base):
     description: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True,
+    )
+
+    courses = relationship(
+        "Course",
+        back_populates="category",
     )
 
     created_at: Mapped[datetime] = mapped_column(
