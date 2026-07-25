@@ -20,3 +20,21 @@ class CategoryRepository:
     @staticmethod
     def get_all(db: Session):
         return db.query(Category).all()
+
+    @staticmethod
+    def update(db: Session, category: Category):
+        db.commit()
+        db.refresh(category)
+        return category
+
+    def get_by_id(db: Session, category_id: int):
+        return db.query(Category).filter(Category.id == category_id).first()
+
+    @staticmethod
+    def get_by_slug(db: Session, slug: str):
+        return db.query(Category).filter(Category.slug == slug).first()
+
+    @staticmethod
+    def delete(db: Session, category: Category):
+        db.delete(category)
+        db.commit()
