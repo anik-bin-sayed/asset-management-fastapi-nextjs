@@ -1,12 +1,18 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import SideLogin from "./Sidebar/SideLogin";
+import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  //  show login sidebar
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navRef = useRef();
   const menuRef = useRef();
@@ -73,6 +79,10 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <>
       {/* Overlay for mobile menu */}
@@ -91,10 +101,11 @@ const Navbar = () => {
         }`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="text-2xl font-bold text-yellow-500 tracking-tight">
-            EduHub
-          </div>
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <span className="text-xl font-bold text-gray-900">Learn </span>
+          <span className="text-xl bg-yellow-500 rounded px-2 py-1 font-bold text-gray-900">
+            Hub
+          </span>
         </div>
 
         {/* Desktop Navigation Links */}
@@ -115,12 +126,11 @@ const Navbar = () => {
 
         {/* Right side: Login/Register + Search Icon + Hamburger */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Login & Register Buttons */}
-          <button className="px-3 sm:px-5 py-1.5 sm:py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 transition-colors duration-200 cursor-pointer text-sm sm:text-base">
-            Login
-          </button>
-          <button className="px-3 sm:px-5 py-1.5 sm:py-2 bg-yellow-500 text-black font-medium rounded-md hover:bg-yellow-600 transition-colors duration-200 shadow-sm cursor-pointer text-sm sm:text-base">
-            Register
+          <button
+            onClick={handleSidebar}
+            className="px-3 sm:px-5 py-1.5 sm:py-2 text-gray-700 font-medium rounded-md bg-yellow-500  hover:bg-yellow-600 transition-colors duration-200 cursor-pointer text-sm sm:text-base hidden md:flex items-center gap-6 lg:gap-8"
+          >
+            Login/Register
           </button>
 
           {/* Search Icon - visible on all screens, placed before hamburger */}
@@ -129,25 +139,13 @@ const Navbar = () => {
             className="p-2 text-gray-600 hover:text-yellow-500 transition-colors focus:outline-none"
             aria-label="Open search"
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <HiMagnifyingGlass className="h-5 w-5" />
           </button>
 
           {/* Hamburger Menu Button (mobile only) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex flex-col items-center justify-center w-8 h-8 ml-1 text-gray-600 hover:text-yellow-500 focus:outline-none"
+            className="md:hidden flex flex-col items-center justify-center w-8 h-8 ml-1 text-black hover:text-yellow-500 focus:outline-none gap-1 rounded bg-gray-200"
             aria-label="Toggle menu"
           >
             <span
@@ -186,38 +184,14 @@ const Navbar = () => {
               placeholder="What do you want to learn?"
               className="w-full px-2 py-2 pl-12 text-lg border border-yellow-400 rounded-md focus:outline-none focus:ring-0 outline-yellow-400 transition-all "
             />
-            <svg
-              className="absolute left-3 top-3 h-6 w-6 text-yellow-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <HiMagnifyingGlass className="absolute left-3 top-3 h-6 w-6 text-yellow-500" />
           </div>
           <button
             onClick={() => setSearchOpen(false)}
             className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
             aria-label="Close search"
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <HiXMark className="h-6 w-6" />
           </button>
         </div>
       </div>
@@ -225,7 +199,7 @@ const Navbar = () => {
       {/* Mobile Menu (slide-in from right) */}
       <div
         ref={menuRef}
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-50 md:hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -247,15 +221,19 @@ const Navbar = () => {
             </a>
           </div>
           <div className="pt-4 border-t border-gray-100">
-            <button className="w-full py-2 text-center text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-              Login
-            </button>
-            <button className="w-full py-2 mt-2 text-center bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-600 transition-colors">
-              Register
+            <button
+              onClick={handleSidebar}
+              className="w-full py-2 text-center text-black font-medium rounded-lg hover:bg-gray-50 transition-colors bg-yellow-600"
+            >
+              Login/Register
             </button>
           </div>
         </div>
       </div>
+
+      {sidebarOpen && (
+        <SideLogin isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      )}
     </>
   );
 };

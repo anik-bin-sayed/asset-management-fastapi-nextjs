@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
 
 const Hero = () => {
   return (
@@ -54,67 +55,19 @@ const Hero = () => {
             {/* Features List */}
             <div className="flex flex-wrap gap-3 text-sm">
               <span className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="h-5 w-5 text-yellow-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <HiCheck className="h-5 w-5 text-yellow-500" />
                 100+ Courses
               </span>
               <span className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="h-5 w-5 text-yellow-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <HiCheck className="h-5 w-5 text-yellow-500" />
                 Expert Instructors
               </span>
               <span className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="h-5 w-5 text-yellow-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <HiCheck className="h-5 w-5 text-yellow-500" />
                 Lifetime Access
               </span>
               <span className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="h-5 w-5 text-yellow-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <HiCheck className="h-5 w-5 text-yellow-500" />
                 Certificate
               </span>
             </div>
@@ -125,13 +78,7 @@ const Hero = () => {
                 Get Started Free
               </button>
               <button className="px-8 py-3 text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-all duration-200 hover:border-yellow-500 flex items-center gap-2">
-                <svg
-                  className="h-5 w-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                <HiPlay className="h-5 w-5" />
                 Watch Demo
               </button>
             </div>
@@ -168,14 +115,12 @@ const Hero = () => {
                 />
                 {/* Floating Badge - Top */}
                 <div className="absolute top-3 left-3 bg-white/10 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/20">
-                  <p className="text-white text-xs font-medium">
-                    📚 200+ Courses
-                  </p>
+                  <p className="text-white text-xs font-medium">200+ Courses</p>
                 </div>
                 {/* Floating Badge - Bottom */}
                 <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10">
                   <p className="text-yellow-400 text-xs font-medium">
-                    ⭐ 4.9/5 Rating
+                    4.9/5 Rating
                   </p>
                 </div>
               </div>
@@ -197,19 +142,7 @@ const Hero = () => {
       {/* Scroll Indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce">
         <span className="text-gray-400 text-xs font-medium">Scroll</span>
-        <svg
-          className="h-4 w-4 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
+        <HiArrowDown className="h-4 w-4 text-gray-400" />
       </div>
     </section>
   );
