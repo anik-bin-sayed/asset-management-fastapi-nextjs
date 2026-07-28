@@ -13,7 +13,6 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 
 const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
-  // STEP
   const [step, setStep] = useState(1);
 
   // FORM DATA
@@ -170,9 +169,7 @@ const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
   // BACK TO EMAIL
   const handleBack = () => {
     setStep(1);
-
     setPassword("");
-
     setErrors({
       email: "",
       password: "",
