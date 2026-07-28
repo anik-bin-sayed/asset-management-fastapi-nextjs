@@ -18,7 +18,7 @@ const Navbar = () => {
   const menuRef = useRef();
   const searchInputRef = useRef();
 
-  // Handle scroll: hide navbar on down, show on up, close mobile & search on scroll down
+  // Handle scroll
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -196,7 +196,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu (slide-in from right) */}
+      {/* Mobile Menu */}
       <div
         ref={menuRef}
         className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
@@ -231,9 +231,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {sidebarOpen && (
-        <SideLogin isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      )}
+      <SideLogin isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>
   );
 };

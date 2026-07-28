@@ -35,7 +35,12 @@ const SideLogin = ({ isOpen, onClose }) => {
   }, [isOpen, onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 ">
+    <div
+      className={`
+      fixed inset-0 z-50
+      ${isOpen ? "pointer-events-auto" : "pointer-events-none"}
+    `}
+    >
       <div
         onClick={() => setShowCloseConfirm(true)}
         className={`
@@ -132,7 +137,7 @@ const SideLogin = ({ isOpen, onClose }) => {
             </div>
 
             {/* Body */}
-            <div className="px-6 py-8 sm:px-10 overflow-hidden">
+            <div>
               <AnimatePresence mode="wait">
                 {isLogin ? (
                   <motion.div
