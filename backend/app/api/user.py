@@ -9,6 +9,7 @@ from app.models.user import User
 from app.services.user_service import UserService
 from app.utils.cookies import set_auth_cookies
 from app.core.dependencies import get_current_user
+from app.repositories.user_repository import UserRepository
 
 router = APIRouter(
     prefix="/users",
@@ -28,6 +29,18 @@ def register(
         db,
         data,
     )
+
+
+@router.post("/check-email")
+async def check_email(data: CheckEmailSchema, db: Session = Depends(get_db)):
+    user = UserRepository.get_by_email(
+        db,
+        data.email,
+    )
+    if not user:
+        return {"exists": False, "message": "No account found with this email."}
+
+    return {"exists": True, "message": "Email exists."}
 
 
 @router.post("/login")

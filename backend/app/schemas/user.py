@@ -8,6 +8,10 @@ class UserCreate(BaseModel):
     password: str
 
 
+class CheckEmailSchema(BaseModel):
+    email: EmailStr
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
