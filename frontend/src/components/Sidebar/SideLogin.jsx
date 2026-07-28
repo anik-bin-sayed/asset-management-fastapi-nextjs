@@ -150,7 +150,11 @@ const SideLogin = ({ isOpen, onClose }) => {
                       ease: "easeInOut",
                     }}
                   >
-                    <LoginRegister setIsLogin={setIsLogin} />
+                    <LoginRegister
+                      setIsLogin={setIsLogin}
+                      setShowCloseConfirm={setShowCloseConfirm}
+                      onClose={onClose}
+                    />
                   </motion.div>
                 ) : (
                   <motion.div

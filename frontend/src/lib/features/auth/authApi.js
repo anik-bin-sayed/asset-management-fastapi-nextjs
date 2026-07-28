@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../api/baseApi";
 
 export const authApi = createApi({
   reducerPath: "authApi",
 
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/api",
-  }),
-
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ["Auth", "User"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
-        url: "/auth/login",
+        url: "/users/login",
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["User"],
     }),
 
     checkEmail: builder.mutation({
@@ -34,9 +34,27 @@ export const authApi = createApi({
 
     getProfile: builder.query({
       query: () => ({
-        url: "/auth/me",
+        url: "/users/me",
         method: "GET",
       }),
+      providesTags: ["User"],
+    }),
+
+    refreshAccessToken: builder.mutation({
+      query: (data) => ({
+        url: "/users/refresh",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    logoutUser: builder.mutation({
+      query: (data) => ({
+        url: "/users/logout",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User", "Auth"],
     }),
   }),
 });
@@ -46,4 +64,5 @@ export const {
   useCheckEmailMutation,
   useRegisterMutation,
   useGetProfileQuery,
+  useLogoutUserMutation,
 } = authApi;

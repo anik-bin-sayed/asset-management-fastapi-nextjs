@@ -7,11 +7,12 @@ import { toast } from "sonner";
 
 import {
   useCheckEmailMutation,
+  useGetProfileQuery,
   useLoginMutation,
 } from "@/lib/features/auth/authApi";
 import { AnimatePresence, motion } from "framer-motion";
 
-const LoginRegister = ({ setIsLogin }) => {
+const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
   // STEP
   const [step, setStep] = useState(1);
 
@@ -22,8 +23,6 @@ const LoginRegister = ({ setIsLogin }) => {
   const [rememberMe, setRememberMe] = useState(false);
 
   // LOADING
-  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // ERRORS
   const [errors, setErrors] = useState({
@@ -32,8 +31,9 @@ const LoginRegister = ({ setIsLogin }) => {
   });
 
   // RTK QUERY
-  const [checkEmail] = useCheckEmailMutation();
-  const [login] = useLoginMutation();
+  const [checkEmail, { isLoading: isCheckingEmail }] = useCheckEmailMutation();
+  const [login, { isLoading: isLoggingIn }] = useLoginMutation();
+  const { data: profileData, refetch: refetchProfile } = useGetProfileQuery();
 
   // EMAIL VALIDATION
   const validateEmail = () => {
@@ -105,8 +105,6 @@ const LoginRegister = ({ setIsLogin }) => {
 
     if (!validateEmail()) return;
 
-    setIsCheckingEmail(true);
-
     try {
       const response = await checkEmail({
         email: email.trim().toLowerCase(),
@@ -132,8 +130,6 @@ const LoginRegister = ({ setIsLogin }) => {
             "Something went wrong. Please try again.",
         );
       }
-    } finally {
-      setIsCheckingEmail(false);
     }
   };
 
@@ -143,17 +139,14 @@ const LoginRegister = ({ setIsLogin }) => {
 
     if (!validatePassword()) return;
 
-    setIsLoggingIn(true);
-
     try {
-      const response = await login({
+      await login({
         email: email.trim().toLowerCase(),
         password,
       }).unwrap();
-
-      console.log("Login successful:", response);
-
-      toast.success("Login successful!");
+      onClose();
+      setShowCloseConfirm(false);
+      refetchProfile();
     } catch (error) {
       console.error("Login failed:", error);
 
@@ -171,8 +164,6 @@ const LoginRegister = ({ setIsLogin }) => {
             "Login failed. Please try again.",
         );
       }
-    } finally {
-      setIsLoggingIn(false);
     }
   };
 

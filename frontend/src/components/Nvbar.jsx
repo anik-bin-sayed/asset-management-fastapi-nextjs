@@ -3,6 +3,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import SideLogin from "./Sidebar/SideLogin";
 import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
+import { useGetProfileQuery } from "@/lib/features/auth/authApi";
+import NavbarUserDetails from "@/utils/NavbarUserDetails";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -18,6 +20,9 @@ const Navbar = () => {
   const menuRef = useRef();
   const searchInputRef = useRef();
 
+  // redux
+  const { data: profileData, isLoading } = useGetProfileQuery();
+  console.log(profileData);
   // Handle scroll
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
@@ -127,14 +132,6 @@ const Navbar = () => {
         {/* Right side: Login/Register + Search Icon + Hamburger */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
-            onClick={handleSidebar}
-            className="px-3 sm:px-5 py-1.5 sm:py-2 text-gray-700 font-medium rounded-md bg-yellow-500  hover:bg-yellow-600 transition-colors duration-200 cursor-pointer text-sm sm:text-base hidden md:flex items-center gap-6 lg:gap-8"
-          >
-            Login/Register
-          </button>
-
-          {/* Search Icon - visible on all screens, placed before hamburger */}
-          <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="p-2 text-gray-600 hover:text-yellow-500 transition-colors focus:outline-none"
             aria-label="Open search"
@@ -142,10 +139,27 @@ const Navbar = () => {
             <HiMagnifyingGlass className="h-5 w-5" />
           </button>
 
+          {!isLoading && (
+            <div>
+              {profileData ? (
+                <NavbarUserDetails profileData={profileData} />
+              ) : (
+                <button
+                  onClick={handleSidebar}
+                  className="px-3 sm:px-5 py-1.5 sm:py-2 text-gray-700 font-medium rounded-md bg-yellow-500  hover:bg-yellow-600 transition-colors duration-200 cursor-pointer text-sm sm:text-base hidden md:flex items-center gap-6 lg:gap-8"
+                >
+                  Login/Register
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Search Icon - visible on all screens, placed before hamburger */}
+
           {/* Hamburger Menu Button (mobile only) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex flex-col items-center justify-center w-8 h-8 ml-1 text-black hover:text-yellow-500 focus:outline-none gap-1 rounded bg-gray-200"
+            className="md:hidden flex flex-col items-center justify-center w-8 h-8 ml-1 text-black focus:outline-none gap-1 rounded bg-gray-200"
             aria-label="Toggle menu"
           >
             <span
