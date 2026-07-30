@@ -5,11 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import {
-  useGetProfileQuery,
-  useLogoutUserMutation,
-} from "@/lib/features/auth/authApi";
-import { useDispatch } from "react-redux";
+import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import Link from "next/link";
 
 const defaultImage =
   "https://ui-avatars.com/api/?name=User&background=facc15&color=000&size=128";
@@ -168,7 +165,9 @@ const NavbarUserDetails = ({ profileData }) => {
                 <FiUser className="w-4 h-4 text-gray-600" />
               </span>
 
-              <span className="font-medium">Profile</span>
+              <Link href="/profile" className="font-medium">
+                Profile
+              </Link>
             </button>
 
             {/* Logout */}

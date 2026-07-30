@@ -1,0 +1,246 @@
+"use client";
+
+import { authApi, useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { useDispatch } from "react-redux";
+
+import {
+  FaUserCircle,
+  FaSignOutAlt,
+  FaChevronDown,
+  FaTachometerAlt,
+  FaUserCog,
+} from "react-icons/fa";
+
+const ProfileNavbar = ({ profile }) => {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  //   redux
+  const [logoutUser] = useLogoutUserMutation();
+
+  const hour = new Date().getHours();
+
+  const greeting =
+    hour >= 5 && hour < 12
+      ? "Good Morning "
+      : hour >= 12 && hour < 17
+        ? "Good Afternoon "
+        : hour >= 17 && hour < 21
+          ? "Good Evening "
+          : "Good Night";
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!dropdownRef.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const logout = async () => {
+    try {
+      await logoutUser().unwrap();
+      dispatch(authApi.util.resetApiState());
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between px-6 py-3 md:px-10 lg:px-16 bg-white/80 backdrop-blur-md border-b border-gray-100/80 shadow-sm transition-all duration-300">
+      <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500 text-lg font-bold text-black">
+            L
+          </div>
+
+          <div className="">
+            <h2 className="text-lg font-bold text-gray-800">Learn Hub</h2>
+            <p className="text-xs text-gray-500">Learning Platform</p>
+          </div>
+        </Link>
+
+        <div className="h-10 w-px bg-gray-200 hidden sm:block" />
+
+        <div className=" flex-col hidden sm:block">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-medium text-gray-800">{greeting}</h2>
+
+            <p className="hidden md:block font-medium text-gray-700">
+              {profile?.name}
+            </p>
+          </div>
+
+          <p className="text-sm text-gray-500">{profile?.email}</p>
+        </div>
+      </div>
+
+      {/* Right - Actions */}
+      <div className="flex items-center gap-3">
+        {/* Profile Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setOpen(!open)}
+            className={`
+              flex items-center gap-2.5 
+              rounded-xl border-2  transition-all duration-300
+              hover:shadow-lg hover:scale-[1.02] active:scale-95
+              ${
+                open
+                  ? "border-yellow-400 shadow-lg shadow-indigo-500/25"
+                  : " bg-white/80 hover:border-gray-200 border-gray-200"
+              }
+              backdrop-blur-sm
+              px-2 py-1.5
+            `}
+          >
+            <div className="relative">
+              <div
+                className={`
+                  absolute -inset-0.5 rounded-full opacity-75 blur-sm transition-opacity duration-300
+                  ${open ? "opacity-100" : "opacity-0"}
+                `}
+              />
+              <Image
+                src="https://i.pravatar.cc/100"
+                alt="Profile"
+                width={40}
+                height={40}
+                className="relative rounded-full border-2 border-white object-cover"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FaChevronDown
+                className={`text-xs transition-all duration-300 ${
+                  open ? "rotate-180 text-yellow-400" : "text-gray-400"
+                }`}
+              />
+            </div>
+          </button>
+
+          {/* Dropdown Menu */}
+          {open && (
+            <div className="absolute right-0 mt-3 w-72 rounded-2xl overflow-hidden border shadow-2xl shadow-black/10 bg-white/95 border-gray-100/80 backdrop-blur-xl z-50">
+              {/* User Info Header */}
+              <div className="px-5 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="relative w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold  border-2">
+                      {getInitials(profile?.name)}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-base text-gray-800">
+                      {profile?.name}
+                    </h4>
+                    <p className="text-sm text-gray-500">{profile?.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="p-2">
+                {pathname === "/profile" ? (
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
+                  >
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
+                      <FaTachometerAlt />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">Dashboard</p>
+                      <p className="text-xs text-gray-400">
+                        Go to your dashboard
+                      </p>
+                    </div>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
+                  >
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
+                      <FaUserCircle />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">Profile</p>
+                      <p className="text-xs text-gray-400">
+                        View and edit your profile
+                      </p>
+                    </div>
+                  </Link>
+                )}
+
+                <Link
+                  href="/settings"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
+                    <FaUserCog />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Settings</p>
+                    <p className="text-xs text-gray-400">
+                      Manage your preferences
+                    </p>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Divider */}
+              <div className="mx-4 h-px bg-gray-100" />
+
+              {/* Logout Button */}
+              <div className="p-2">
+                <button
+                  className="flex w-full items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 cursor-pointer border"
+                  onClick={logout}
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center border  transition-all duration-200">
+                    <FaSignOutAlt />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Logout</p>
+                    <p className="text-xs text-gray-400">
+                      Sign out of your account
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileNavbar;
