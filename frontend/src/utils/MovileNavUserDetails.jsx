@@ -35,11 +35,11 @@ const MobileNavUserDetails = ({ profileData }) => {
       >
         <div className="flex items-center gap-3">
           <Image
-            src="https://i.pravatar.cc/100"
+            src={profileData?.avatar || "/default-profile.png"}
             alt="Profile"
             width={48}
             height={48}
-            className="rounded-full border object-cover"
+            className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
           />
 
           <div className="min-w-0">

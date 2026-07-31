@@ -69,7 +69,7 @@ const NavbarUserDetails = ({ profileData }) => {
         {/* Profile Image */}
         <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-gray-200">
           <Image
-            src={profileData?.image || defaultImage}
+            src={profileData?.avatar || defaultImage}
             alt={profileData?.name || "Profile"}
             fill
             sizes="40px"

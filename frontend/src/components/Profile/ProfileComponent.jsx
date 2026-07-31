@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
@@ -24,16 +24,26 @@ import {
   FaTimesCircle,
   FaCheck,
   FaCopy,
+  FaCamera,
+  FaTimes,
 } from "react-icons/fa";
 import MobileSectionTopBar from "./MobileSectionTopBar";
+import { useUploadAvatarMutation } from "@/lib/features/profile/profileApi";
 
 const ProfileComponent = () => {
   const [copied, setCopied] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const fileInputRef = useRef(null);
 
   // redux
-  const { data: profile, isLoading } = useGetProfileQuery(undefined, {
+  const {
+    data: profile,
+    refetch,
+    isLoading,
+  } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+  const [uploadAvatar, { isLoading: uploading }] = useUploadAvatarMutation();
 
   if (isLoading) return <Loader />;
 
@@ -51,6 +61,22 @@ const ProfileComponent = () => {
     }
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      await uploadAvatar(formData).unwrap();
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <ProfileNavbar profile={profile} />
@@ -61,13 +87,39 @@ const ProfileComponent = () => {
           {/* Left Card */}
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:sticky lg:top-24 h-fit">
             <div className="flex flex-col items-center">
-              <Image
-                src="https://i.pravatar.cc/100"
-                alt="Profile"
-                width={120}
-                height={120}
-                className="rounded-full border-4 border-yellow-100 object-cover"
-              />
+              <div className="relative">
+                {/* Profile Image */}
+                <Image
+                  src={profile?.avatar || "/default-profile.png"}
+                  alt="Profile"
+                  width={120}
+                  height={120}
+                  onClick={() => setPreviewOpen(true)}
+                  className="h-32 w-32 rounded-full object-cover border-2 border-gray-300 cursor-pointer transition hover:scale-105"
+                />
+                {uploading && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+                    <div className="h-10 w-10 rounded-full border-4 border-white border-t-transparent animate-spin" />
+                  </div>
+                )}
+
+                {/* Camera Button */}
+                <button
+                  onClick={() => fileInputRef.current.click()}
+                  className="absolute bottom-1 right-1 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black shadow-lg hover:bg-yellow-500 transition cursor-pointer"
+                >
+                  <FaCamera size={16} />
+                </button>
+
+                {/* Hidden Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleImageChange}
+                />
+              </div>
 
               <h2 className="mt-4 text-2xl font-bold">{profile?.name}</h2>
 
@@ -185,6 +237,26 @@ const ProfileComponent = () => {
           </div>
         </div>
       </div>
+
+      {previewOpen && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          {/* Close */}
+          <button
+            onClick={() => setPreviewOpen(false)}
+            className="absolute top-6 right-6 rounded-full bg-white p-3 shadow-lg hover:bg-gray-100 cursor-pointer"
+          >
+            <FaTimes />
+          </button>
+
+          <Image
+            src={profile?.avatar || "/default-profile.png"}
+            alt="Profile"
+            width={700}
+            height={700}
+            className="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
+          />
+        </div>
+      )}
     </div>
   );
 };

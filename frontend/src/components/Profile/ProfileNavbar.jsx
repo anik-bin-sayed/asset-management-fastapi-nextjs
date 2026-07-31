@@ -128,11 +128,11 @@ const ProfileNavbar = ({ profile }) => {
                 `}
               />
               <Image
-                src="https://i.pravatar.cc/100"
+                src={profile?.avatar || "/default-profile.png"}
                 alt="Profile"
                 width={40}
                 height={40}
-                className="relative rounded-full border-2 border-white object-cover"
+                className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
               />
             </div>
 
@@ -153,7 +153,13 @@ const ProfileNavbar = ({ profile }) => {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className="relative w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold  border-2">
-                      {getInitials(profile?.name)}
+                      <Image
+                        src={profile?.avatar || "/default-profile.png"}
+                        alt="Profile"
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
+                      />
                     </div>
                   </div>
                   <div>
