@@ -1,0 +1,99 @@
+"use client";
+
+import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaUser,
+  FaTachometerAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
+
+const MobileNavUserDetails = ({ profileData }) => {
+  const [open, setOpen] = useState(false);
+
+  //   redux
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      window.location.reload();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  return (
+    <div className="border-b border-gray-200">
+      {/* Header */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between p-4 cursor-pointer"
+      >
+        <div className="flex items-center gap-3">
+          <Image
+            src="https://i.pravatar.cc/100"
+            alt="Profile"
+            width={48}
+            height={48}
+            className="rounded-full border object-cover"
+          />
+
+          <div className="min-w-0">
+            <h3 className="truncate font-semibold text-gray-800">
+              {profileData?.name}
+            </h3>
+
+            <p className="truncate text-sm text-gray-500">
+              {profileData?.email}
+            </p>
+          </div>
+        </div>
+
+        {open ? (
+          <FaChevronUp className="text-gray-500" />
+        ) : (
+          <FaChevronDown className="text-gray-500" />
+        )}
+      </button>
+
+      {/* Menu */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ${
+          open ? "max-h-60" : "max-h-0"
+        }`}
+      >
+        <div className="px-3 pb-3 space-y-1">
+          <Link
+            href="/profile"
+            className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+          >
+            <FaUser />
+            <span>Profile</span>
+          </Link>
+
+          <Link
+            href="/dashboard"
+            className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+          >
+            <FaTachometerAlt />
+            <span>Dashboard</span>
+          </Link>
+
+          <button
+            onClick={handleLogout}
+            className="flex border border-gray-200  w-full items-center gap-3 rounded-lg px-3 py-3 text-red-600 hover:bg-red-50 cursor-pointer"
+          >
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MobileNavUserDetails;

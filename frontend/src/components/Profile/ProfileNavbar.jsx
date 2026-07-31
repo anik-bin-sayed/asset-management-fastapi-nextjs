@@ -73,7 +73,7 @@ const ProfileNavbar = ({ profile }) => {
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 md:px-10 lg:px-16 bg-white/80 backdrop-blur-md border-b border-gray-100/80 shadow-sm transition-all duration-300">
+    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-100/80 bg-white/80 px-6 py-3 shadow-sm backdrop-blur-md transition-all duration-300 md:px-10 lg:px-16">
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500 text-lg font-bold text-black">

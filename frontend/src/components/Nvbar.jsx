@@ -5,6 +5,7 @@ import SideLogin from "./Sidebar/SideLogin";
 import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import NavbarUserDetails from "@/utils/NavbarUserDetails";
+import MobileNavUserDetails from "@/utils/MovileNavUserDetails";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -22,7 +23,7 @@ const Navbar = () => {
 
   // redux
   const { data: profileData, isLoading } = useGetProfileQuery();
-  console.log(profileData);
+
   // Handle scroll
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
@@ -213,11 +214,14 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         ref={menuRef}
-        className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-19 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="p-6 pt-20 space-y-4">
+        {!isLoading && profileData && (
+          <MobileNavUserDetails profileData={profileData} />
+        )}
+        <div className="p-6 pt-8 space-y-4">
           <div className="space-y-2">
             <a
               href="#"
@@ -234,14 +238,16 @@ const Navbar = () => {
               Free Courses
             </a>
           </div>
-          <div className="pt-4 border-t border-gray-100">
-            <button
-              onClick={handleSidebar}
-              className="w-full py-2 text-center text-black font-medium rounded-lg hover:bg-gray-50 transition-colors bg-yellow-600"
-            >
-              Login/Register
-            </button>
-          </div>
+          {!isLoading && !profileData && (
+            <div className="pt-4 border-t border-gray-100">
+              <button
+                onClick={handleSidebar}
+                className="w-full py-2 text-center text-black font-medium rounded-lg hover:bg-gray-50 transition-colors bg-yellow-600"
+              >
+                Login/Register
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
