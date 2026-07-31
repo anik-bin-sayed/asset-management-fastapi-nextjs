@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.user import router as userRouter
 from app.api.category import router as categoryRouter
 from app.api.course import router as courseRouter
+from app.api.profile import router as profileRouter
 
 app = FastAPI(title="Course Management API")
 
@@ -21,6 +22,7 @@ app.add_middleware(
 app.include_router(userRouter, prefix="/api")
 app.include_router(categoryRouter, prefix="/api")
 app.include_router(courseRouter, prefix="/api")
+app.include_router(profileRouter, prefix="/api")
 
 
 @app.get("/")
