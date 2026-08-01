@@ -29,6 +29,8 @@ import {
 } from "react-icons/fa";
 import MobileSectionTopBar from "./MobileSectionTopBar";
 import { useUploadAvatarMutation } from "@/lib/features/profile/profileApi";
+import Link from "next/link";
+import CountryFlag from "./ui/CountryFlag";
 
 const ProfileComponent = () => {
   const [copied, setCopied] = useState(false);
@@ -120,17 +122,24 @@ const ProfileComponent = () => {
                   onChange={handleImageChange}
                 />
               </div>
-
               <h2 className="mt-4 text-2xl font-bold">{profile?.name}</h2>
-
+              {/* country */}
+              <CountryFlag profile={profile} />
               <p className="text-sm text-gray-500">{profile?.email}</p>
-
               <span className="mt-4 rounded-full bg-yellow-100 px-4 py-1 text-sm font-medium text-yellow-700 capitalize">
                 {profile?.role}
               </span>
-              <button className="mt-4 rounded-full bg-yellow-400 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-500 cursor-pointer">
+              <Link
+                href="/profile/edit"
+                className="mt-4 rounded-full bg-yellow-400 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-500 cursor-pointer"
+              >
                 Edit Profile
-              </button>
+              </Link>
+            </div>
+            <div className="mt-6 text-center">
+              {profile?.bio && (
+                <p className="text-sm text-gray-600">{profile.bio}</p>
+              )}
             </div>
           </div>
 

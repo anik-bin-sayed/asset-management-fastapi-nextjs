@@ -15,7 +15,17 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+
+    updateProfileInfo: builder.mutation({
+      query: ({ formData, user_id }) => ({
+        url: `/profile/edit/${user_id}`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
-export const { useUploadAvatarMutation } = profileApi;
+export const { useUploadAvatarMutation, useUpdateProfileInfoMutation } =
+  profileApi;
