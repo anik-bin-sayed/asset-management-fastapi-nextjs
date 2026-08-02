@@ -2,6 +2,7 @@
 
 import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
 import Image from "next/image";
+
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -35,7 +36,7 @@ const MobileNavUserDetails = ({ profileData }) => {
       >
         <div className="flex items-center gap-3">
           <Image
-            src={profileData?.avatar || "/default-profile.png"}
+            src={profileData?.avatar || "/images/default.jpg"}
             alt="Profile"
             width={48}
             height={48}
@@ -74,6 +75,16 @@ const MobileNavUserDetails = ({ profileData }) => {
             <FaUser />
             <span>Profile</span>
           </Link>
+
+          {profileData?.role === "admin" && (
+            <Link
+              href="/all-users"
+              className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+            >
+              <FaUser />
+              <span>All Users</span>
+            </Link>
+          )}
 
           <Link
             href="/dashboard"

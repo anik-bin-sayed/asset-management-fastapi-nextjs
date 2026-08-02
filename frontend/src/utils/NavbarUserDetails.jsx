@@ -1,15 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiUser, FiLogOut } from "react-icons/fi";
 import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
 import Link from "next/link";
-
-const defaultImage =
-  "https://ui-avatars.com/api/?name=User&background=facc15&color=000&size=128";
+import Image from "next/image";
 
 const NavbarUserDetails = ({ profileData }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +66,7 @@ const NavbarUserDetails = ({ profileData }) => {
         {/* Profile Image */}
         <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-gray-200">
           <Image
-            src={profileData?.avatar || defaultImage}
+            src={profileData?.avatar || "/images/default.jpg"}
             alt={profileData?.name || "Profile"}
             fill
             sizes="40px"
@@ -147,8 +144,8 @@ const NavbarUserDetails = ({ profileData }) => {
             </div>
 
             {/* Profile */}
-            <button
-              type="button"
+            <Link
+              href="/profile"
               onClick={handleProfile}
               className="
                 w-full
@@ -165,10 +162,54 @@ const NavbarUserDetails = ({ profileData }) => {
                 <FiUser className="w-4 h-4 text-gray-600" />
               </span>
 
-              <Link href="/profile" className="font-medium">
-                Profile
+              <span className="font-medium">Profile</span>
+            </Link>
+
+            {/* Dashboard */}
+            <Link
+              href="/dashboard"
+              onClick={handleProfile}
+              className="
+                w-full
+                flex items-center gap-3
+                px-4 py-3
+                text-sm
+                text-gray-700
+                hover:bg-gray-50
+                transition-colors
+                cursor-pointer 
+              "
+            >
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
+                <FiUser className="w-4 h-4 text-gray-600" />
+              </span>
+
+              <span className="font-medium">Dashboard</span>
+            </Link>
+            {/* All users */}
+
+            {profileData?.role === "admin" && (
+              <Link
+                href="/users"
+                onClick={handleProfile}
+                className="
+                w-full
+                flex items-center gap-3
+                px-4 py-3
+                text-sm
+                text-gray-700
+                hover:bg-gray-50
+                transition-colors
+                cursor-pointer 
+              "
+              >
+                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
+                  <FiUser className="w-4 h-4 text-gray-600" />
+                </span>
+
+                <span className="font-medium">All Users</span>
               </Link>
-            </button>
+            )}
 
             {/* Logout */}
             <button

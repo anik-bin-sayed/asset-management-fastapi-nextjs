@@ -81,7 +81,6 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const payload = { ...formData };
-      console.log("Submitting payload:", payload);
       await updateProfileInfo({
         formData: payload,
         user_id: profile.id,

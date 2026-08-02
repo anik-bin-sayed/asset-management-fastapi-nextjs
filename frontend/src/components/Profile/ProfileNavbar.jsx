@@ -128,7 +128,7 @@ const ProfileNavbar = ({ profile }) => {
                 `}
               />
               <Image
-                src={profile?.avatar || "/default-profile.png"}
+                src={profile?.avatar || "/images/default.jpg"}
                 alt="Profile"
                 width={40}
                 height={40}
@@ -154,7 +154,7 @@ const ProfileNavbar = ({ profile }) => {
                   <div className="relative">
                     <div className="relative w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold  border-2">
                       <Image
-                        src={profile?.avatar || "/default-profile.png"}
+                        src={profile?.avatar || "/images/default.jpg"}
                         alt="Profile"
                         width={48}
                         height={48}

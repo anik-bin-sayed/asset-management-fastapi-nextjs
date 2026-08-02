@@ -1,53 +1,51 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useUserProfileQuery } from "@/lib/features/profile/profileApi";
+import React, { useState } from "react";
+import ProfileNavbar from "../Profile/ProfileNavbar";
+import MobileSectionTopBar from "../Profile/MobileSectionTopBar";
 import Image from "next/image";
-
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
-
-import Loader from "@/utils/Loader";
-import ProfileNavbar from "./ProfileNavbar";
+import CountryFlag from "../Profile/ui/CountryFlag";
 
 import {
-  FaUser,
-  FaEnvelope,
-  FaPhoneAlt,
-  FaVenusMars,
-  FaBirthdayCake,
-  FaMapMarkerAlt,
-  FaGlobe,
-  FaGithub,
-  FaLinkedin,
-  FaShieldAlt,
-  FaCalendarAlt,
-  FaCheckCircle,
-  FaTimesCircle,
   FaCheck,
   FaCopy,
-  FaCamera,
+  FaEnvelope,
+  FaGithub,
+  FaGlobe,
+  FaLinkedin,
+  FaUser,
+  FaVenusMars,
+} from "react-icons/fa6";
+import {
+  FaBirthdayCake,
+  FaCalendarAlt,
+  FaCheckCircle,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaShieldAlt,
   FaTimes,
+  FaTimesCircle,
 } from "react-icons/fa";
-import MobileSectionTopBar from "./MobileSectionTopBar";
-import { useUploadAvatarMutation } from "@/lib/features/profile/profileApi";
-import Link from "next/link";
-import CountryFlag from "./ui/CountryFlag";
+import { useGetProfileQuery } from "@/lib/features/auth/authApi";
+import Loader from "@/utils/Loader";
 
-const ProfileComponent = () => {
+const UserProfile = ({ userId }) => {
   const [copied, setCopied] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const fileInputRef = useRef(null);
-
-  // redux
   const {
     data: profile,
-    refetch,
     isLoading,
+    isError,
+  } = useUserProfileQuery({ user_id: userId });
+
+  const {
+    data: UserProfile,
+    refetch,
+    isLoading: UserProfileLoading,
   } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const [uploadAvatar, { isLoading: uploading }] = useUploadAvatarMutation();
-
-  if (isLoading) return <Loader />;
 
   const copyId = async () => {
     try {
@@ -63,25 +61,11 @@ const ProfileComponent = () => {
     }
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("avatar", file);
-
-    try {
-      await uploadAvatar(formData).unwrap();
-      await refetch();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  if (UserProfileLoading || isLoading) return <Loader />;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ProfileNavbar profile={profile} />
+      <ProfileNavbar profile={UserProfile} />
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <MobileSectionTopBar />
@@ -99,28 +83,6 @@ const ProfileComponent = () => {
                   onClick={() => setPreviewOpen(true)}
                   className="h-32 w-32 rounded-full object-cover border-2 border-gray-300 cursor-pointer transition hover:scale-105"
                 />
-                {uploading && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
-                    <div className="h-10 w-10 rounded-full border-4 border-white border-t-transparent animate-spin" />
-                  </div>
-                )}
-
-                {/* Camera Button */}
-                <button
-                  onClick={() => fileInputRef.current.click()}
-                  className="absolute bottom-1 right-1 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black shadow-lg hover:bg-yellow-500 transition cursor-pointer"
-                >
-                  <FaCamera size={16} />
-                </button>
-
-                {/* Hidden Input */}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handleImageChange}
-                />
               </div>
               <h2 className="mt-4 text-2xl font-bold">{profile?.name}</h2>
               {/* country */}
@@ -129,12 +91,6 @@ const ProfileComponent = () => {
               <span className="mt-4 rounded-full bg-yellow-100 px-4 py-1 text-sm font-medium text-yellow-700 capitalize">
                 {profile?.role}
               </span>
-              <Link
-                href="/profile/edit"
-                className="mt-4 rounded-full bg-yellow-400 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-500 cursor-pointer"
-              >
-                Edit Profile
-              </Link>
             </div>
             <div className="mt-6 text-center">
               {profile?.bio && (
@@ -306,4 +262,4 @@ const InfoCard = ({ icon, title, value }) => {
   );
 };
 
-export default ProfileComponent;
+export default UserProfile;

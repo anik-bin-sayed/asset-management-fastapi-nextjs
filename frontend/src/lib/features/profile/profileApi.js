@@ -24,8 +24,36 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+
+    userProfile: builder.query({
+      query: ({ user_id }) => ({
+        url: `/profile/${user_id}`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+
+    // Only admin access
+
+    allUsers: builder.query({
+      query: ({ page = 1, limit = 30, search = "" }) => ({
+        url: "/users",
+        method: "GET",
+        params: {
+          page,
+          limit,
+          search,
+        },
+      }),
+
+      providesTags: ["User"],
+    }),
   }),
 });
 
-export const { useUploadAvatarMutation, useUpdateProfileInfoMutation } =
-  profileApi;
+export const {
+  useUploadAvatarMutation,
+  useUpdateProfileInfoMutation,
+  useAllUsersQuery,
+  useUserProfileQuery,
+} = profileApi;
