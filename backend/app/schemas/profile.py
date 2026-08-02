@@ -20,7 +20,7 @@ class UpdateProfileSchema(BaseModel):
     github: HttpUrl | None = None
     linkedin: HttpUrl | None = None
 
-    @field_validator("website", "github", "linkedin", mode="before")
+    @field_validator("website", "github", "linkedin", "date_of_birth", mode="before")
     @classmethod
     def empty_string_to_none(cls, value):
         if value == "":

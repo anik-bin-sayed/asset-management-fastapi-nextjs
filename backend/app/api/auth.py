@@ -12,8 +12,8 @@ from app.core.dependencies import get_current_user
 from app.repositories.user_repository import UserRepository
 
 router = APIRouter(
-    prefix="/users",
-    tags=["Users"],
+    prefix="/auth",
+    tags=["Auth"],
 )
 
 

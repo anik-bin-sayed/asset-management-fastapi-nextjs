@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.models.user import User
 
@@ -39,3 +40,29 @@ class UserRepository:
         refresh_token: str,
     ):
         return db.query(User).filter(User.refresh_token == refresh_token).first()
+
+    @staticmethod
+    def get_all_users(
+        db,
+        offset: int,
+        limit: int,
+        search: str | None = None,
+    ):
+        query = db.query(User).filter(User.role != "admin")
+
+        if search:
+            query = query.filter(
+                or_(
+                    User.name.ilike(f"%{search}%"),
+                    User.username.ilike(f"%{search}%"),
+                    User.email.ilike(f"%{search}%"),
+                    User.id.ilike(f"%{search}%"),
+                    User.phone.ilike(f"%{search}%"),
+                )
+            )
+
+        total = query.count()
+
+        users = query.order_by(User.created_at.desc()).offset(offset).limit(limit).all()
+
+        return users, total

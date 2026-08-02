@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.user import router as userRouter
+from app.api.auth import router as authRouter
 from app.api.category import router as categoryRouter
 from app.api.course import router as courseRouter
 from app.api.profile import router as profileRouter
+from app.api.users import router as usersRouter
 
+# initialize app
 app = FastAPI(title="Course Management API")
 
+# cors
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -19,10 +22,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(userRouter, prefix="/api")
+# router
+app.include_router(authRouter, prefix="/api")
 app.include_router(categoryRouter, prefix="/api")
 app.include_router(courseRouter, prefix="/api")
 app.include_router(profileRouter, prefix="/api")
+app.include_router(usersRouter, prefix="/api")
 
 
 @app.get("/")

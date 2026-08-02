@@ -13,6 +13,7 @@ from app.dependencies.database import get_db
 from app.core.dependencies import get_current_user
 from app.services.cloudinary_service import CloudinaryService
 from app.schemas.profile import UpdateProfileSchema
+from app.repositories.user_repository import UserRepository
 
 router = APIRouter(
     prefix="/profile",
@@ -82,3 +83,19 @@ async def update_profile(
         "message": "Profile updated successfully",
         "user": current_user,
     }
+
+
+@router.get("/{user_id}")
+async def get_user_profile(
+    user_id: str,
+    db: Session = Depends(get_db),
+):
+    user = UserRepository.get_by_id(db, user_id)
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+
+    return user
