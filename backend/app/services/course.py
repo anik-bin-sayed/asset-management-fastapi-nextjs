@@ -58,6 +58,7 @@ class CourseService:
             level=data.level,
             language=data.language,
             status=CourseStatus.DRAFT,
+            course_type=data.course_type,
             category_id=data.category_id,
             instructor_id=current_user.id,
         )

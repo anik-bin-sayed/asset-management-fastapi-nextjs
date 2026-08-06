@@ -32,6 +32,11 @@ class CourseLanguage(str, Enum):
     ENGLISH = "english"
 
 
+class CourseType(str, Enum):
+    FREE = "free"
+    PAID = "paid"
+
+
 class Course(Base):
     __tablename__ = "courses"
 
@@ -91,6 +96,12 @@ class Course(Base):
     status: Mapped[CourseStatus] = mapped_column(
         SqlEnum(CourseStatus),
         default=CourseStatus.DRAFT,
+    )
+
+    course_type: Mapped[CourseStatus] = mapped_column(
+        SqlEnum(CourseType),
+        default=CourseType.FREE,
+        nullable=False,
     )
 
     category_id: Mapped[int] = mapped_column(

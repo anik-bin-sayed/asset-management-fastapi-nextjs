@@ -110,3 +110,9 @@ class User(Base):
         DateTime,
         default=datetime.utcnow,
     )
+
+    free_courses = relationship(
+        "FreeVideo",
+        back_populates="creator",
+        cascade="all, delete-orphan",
+    )

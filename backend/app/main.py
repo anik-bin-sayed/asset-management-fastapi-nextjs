@@ -6,6 +6,7 @@ from app.api.category import router as categoryRouter
 from app.api.course import router as courseRouter
 from app.api.profile import router as profileRouter
 from app.api.users import router as usersRouter
+from app.api.free_course import router as FreeCurseRouter
 
 # initialize app
 app = FastAPI(title="Course Management API")
@@ -28,6 +29,7 @@ app.include_router(categoryRouter, prefix="/api")
 app.include_router(courseRouter, prefix="/api")
 app.include_router(profileRouter, prefix="/api")
 app.include_router(usersRouter, prefix="/api")
+app.include_router(FreeCurseRouter, prefix="/api")
 
 
 @app.get("/")

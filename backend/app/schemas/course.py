@@ -2,6 +2,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.models.course import CourseType
+
 from app.models.course import (
     CourseLanguage,
     CourseLevel,
@@ -18,6 +20,7 @@ class CourseCreate(BaseModel):
     discount_price: Decimal | None = None
 
     level: CourseLevel = CourseLevel.BEGINNER
+    course_type: CourseType = CourseType.FREE
     language: CourseLanguage = CourseLanguage.BANGLA
 
     category_id: int
@@ -37,6 +40,7 @@ class CourseResponse(BaseModel):
 
     price: Decimal
     discount_price: Decimal | None
+    course_type: str
 
     level: CourseLevel
     language: CourseLanguage
