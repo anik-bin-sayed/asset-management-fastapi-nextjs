@@ -1,37 +1,16 @@
-"use client";
-
-import FreeCourses from "@/components/FreeCourses";
-import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
+import { Suspense } from "react";
 import Loader from "@/utils/Loader";
-import { useSearchParams, useRouter } from "next/navigation";
+import FreeCoursesContent from "@/components/FreeCourses/FreeCoursesContent";
 
-const Page = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+const Page = async ({ searchParams }) => {
+  const params = await searchParams;
 
-  // URL থেকে page নেওয়া
-  const currentPage = Number(searchParams.get("page")) || 1;
-
-  const { data, isLoading, isFetching } = useGetAllFreeCoursesQuery({
-    page: currentPage,
-  });
-
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  // Pagination change
-  const handlePageChange = (newPage) => {
-    router.push(`/free-courses?page=${newPage}`);
-  };
+  const currentPage = Number(params?.page) || 1;
 
   return (
-    <FreeCourses
-      allFreeCourse={data}
-      onPageChange={handlePageChange}
-      currentPage={currentPage}
-      isFetching={isFetching}
-    />
+    <Suspense fallback={<Loader />}>
+      <FreeCoursesContent currentPage={currentPage} />
+    </Suspense>
   );
 };
 
