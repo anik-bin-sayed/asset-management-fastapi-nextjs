@@ -6,23 +6,31 @@ import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import NavbarUserDetails from "@/utils/NavbarUserDetails";
 import MobileNavUserDetails from "@/utils/MovileNavUserDetails";
+import ManageCoursesLinks from "./Courses/ManageCoursesLinks";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/lib/features/auth/authSlice";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   //  show login sidebar
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navRef = useRef();
   const menuRef = useRef();
   const searchInputRef = useRef();
+  const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
 
   // redux
   const { data: profileData, isLoading } = useGetProfileQuery();
+  // console.log("profileData", profileData);
 
   // Handle scroll
   const handleScroll = () => {
@@ -85,6 +93,25 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(setUser({ user: profileData }));
+  }, [profileData, dispatch]);
+
   const handleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -107,12 +134,12 @@ const Navbar = () => {
         }`}
       >
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <Link href="/" className="flex items-center justify-center gap-2 mb-4">
           <span className="text-xl font-bold text-gray-900">Learn </span>
           <span className="text-xl bg-yellow-500 rounded px-2 py-1 font-bold text-gray-900">
             Hub
           </span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8">
@@ -128,6 +155,25 @@ const Navbar = () => {
           >
             Free Courses
           </a>
+
+          {profileData && profileData?.role === "admin" && (
+            <div ref={dropdownRef} className="relative">
+              <Link
+                href="/manage-course"
+                // onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-1 text-gray-700 font-medium transition-colors duration-200 py-1 px-2 rounded-lg hover:bg-gray-100 hover:text-yellow-600 cursor-pointer"
+              >
+                Manage Courses{" "}
+                {isOpen ? (
+                  <IoIosArrowUp className="mt-1 " />
+                ) : (
+                  <IoIosArrowDown className="mt-1" />
+                )}
+              </Link>
+
+              <ManageCoursesLinks isOpen={isOpen} />
+            </div>
+          )}
         </div>
 
         {/* Right side: Login/Register + Search Icon + Hamburger */}
@@ -237,6 +283,18 @@ const Navbar = () => {
             >
               Free Courses
             </a>
+            {profileData && profileData?.role === "admin" && (
+              <div ref={dropdownRef} className="relative">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="text-gray-700 font-medium transition-colors duration-200 py-1 px-2 rounded-lg hover:bg-gray-100 hover:text-yellow-600 cursor-pointer"
+                >
+                  Manage Courses
+                </button>
+
+                <ManageCoursesLinks isOpen={isOpen} />
+              </div>
+            )}
           </div>
           {!isLoading && !profileData && (
             <div className="pt-4 border-t border-gray-100">

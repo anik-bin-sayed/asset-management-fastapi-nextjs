@@ -1,11 +1,13 @@
+import FreeCourses from "@/components/Home/FreeCourses";
 import Hero from "@/components/Home/Hero";
 import UpcommingCourse from "@/components/Home/UpcommingCourse";
 import React from "react";
 
-const Home = () => {
+const Home = ({ freeCourseData, freeCourseLoading }) => {
   return (
     <>
       <Hero />
+      <FreeCourses data={freeCourseData} loading={freeCourseLoading} />
       <UpcommingCourse />
     </>
   );

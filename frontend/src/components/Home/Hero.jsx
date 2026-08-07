@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
 
@@ -77,10 +78,13 @@ const Hero = () => {
               <button className="px-8 py-3 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition-all duration-200 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 transform">
                 Get Started Free
               </button>
-              <button className="px-8 py-3 text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-all duration-200 hover:border-yellow-500 flex items-center gap-2">
+              <Link
+                href="/free-courses"
+                className="px-8 py-3 text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-all duration-200 hover:border-yellow-500 flex items-center gap-2"
+              >
                 <HiPlay className="h-5 w-5" />
                 Watch Demo
-              </button>
+              </Link>
             </div>
 
             {/* Trusted By */}
@@ -106,7 +110,7 @@ const Hero = () => {
           <div className="hidden lg:flex justify-center items-center">
             <div className="relative w-full max-w-md">
               {/* Main Image Card */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 border border-white/10 aspect-[4/3]">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 border border-white/10 aspect-4/3">
                 <Image
                   src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                   alt="Students learning"
