@@ -13,6 +13,7 @@ class FreeCourseCreate(BaseModel):
     duration: str | None = None
     tags: list[str] | None = None
     thumbnail: str | None = None
+    status: CourseStatus | None = None
 
 
 class FreeCourseUpdate(BaseModel):

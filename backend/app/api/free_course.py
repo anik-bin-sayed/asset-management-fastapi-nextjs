@@ -16,6 +16,7 @@ from app.schemas.free_video import (
     CourseLanguage,
     FreeCourseUpdate,
 )
+from app.models.free_video import CourseStatus
 from app.core.dependencies import admin_instructor_required
 
 router = APIRouter(
@@ -35,8 +36,12 @@ async def create_course(
     tags: str | None = Form(None),
     thumbnail: UploadFile = File(...),
     db: Session = Depends(get_db),
+    status: CourseStatus = Form(CourseStatus.DRAFT),
     current_user: User = Depends(get_current_user),
 ):
+    print("STATUS FROM POSTMAN:", status)
+    print("STATUS VALUE:", status.value)
+
     data = FreeCourseCreate(
         title=title,
         short_description=short_description,
@@ -45,6 +50,7 @@ async def create_course(
         video_url=video_url,
         duration=duration,
         tags=tags.split(",") if tags else [],
+        status=status,
     )
 
     return await FreeCourseService.create(
@@ -65,7 +71,7 @@ def get_free_courses(
 @router.get("/all")
 def get_all_free_courses(
     page: int = 1,
-    limit: int = 9,
+    limit: int = 16,
     db: Session = Depends(get_db),
 ):
     return FreeCourseService.get_all(

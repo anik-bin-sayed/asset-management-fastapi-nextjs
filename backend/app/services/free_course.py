@@ -49,6 +49,8 @@ class FreeCourseService:
             folder="free_courses",
         )
 
+        course_status = data.status or CourseStatus.DRAFT
+
         course = FreeVideo(
             title=data.title,
             slug=slug,
@@ -61,6 +63,10 @@ class FreeCourseService:
             thumbnail=image["secure_url"],
             thumbnail_public_id=image["public_id"],
             created_by=current_user.id,
+            status=course_status,
+            published_at=(
+                datetime.utcnow() if course_status == CourseStatus.PUBLISHED else None
+            ),
         )
 
         return FreeCourseRepository.create(
