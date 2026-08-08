@@ -22,8 +22,20 @@ export const freeCourseApi = createApi({
       }),
       providesTags: ["Course"],
     }),
+    // create free videos
+    createFreeVideo: builder.mutation({
+      query: (data) => ({
+        url: `/free-courses`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
-export const { useGetSomeFreeCourseQuery, useGetAllFreeCoursesQuery } =
-  freeCourseApi;
+export const {
+  useGetSomeFreeCourseQuery,
+  useGetAllFreeCoursesQuery,
+  useCreateFreeVideoMutation,
+} = freeCourseApi;

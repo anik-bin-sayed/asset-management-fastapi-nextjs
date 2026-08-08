@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 export function proxy(request) {
   const token = request.cookies.get("access_token")?.value;
 
-  const protectedRoutes = ["/profile", "/dashboard", "/users"];
+  const protectedRoutes = [
+    "/profile",
+    "/dashboard",
+    "/users",
+    "/manage-course",
+    "/manage-course/:path*",
+  ];
 
   const isProtected = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route),
@@ -17,5 +23,10 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/dashboard/:path*", "/users/:path*"],
+  matcher: [
+    "/profile/:path*",
+    "/dashboard/:path*",
+    "/users/:path*",
+    "/manage-course/:path*",
+  ],
 };

@@ -1,31 +1,18 @@
-"use client";
-
+import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
 import React, { useState } from "react";
-import Image from "next/image";
-import Loader from "@/utils/Loader";
-import VideoModal from "./VideoModal";
-import { useSelector } from "react-redux";
+import VideoModal from "../Home/VideoModal";
 import Link from "next/link";
+import Image from "next/image";
+import SkeletonLoader from "@/utils/SkeletonLoader";
 
-const FreeCourses = ({ data, loading }) => {
+const FreeVideoList = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
 
-  const { isAuthenticated } = useSelector((state) => state?.auth);
+  const { data: freeCoursesData, isLoading: isFreeCoursesLoading } =
+    useGetAllFreeCoursesQuery();
 
-  if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="py-20 text-center text-gray-600">
-        No free courses available at the moment.
-      </div>
-    );
+  if (isFreeCoursesLoading) {
+    return <SkeletonLoader />;
   }
 
   return (
@@ -41,7 +28,7 @@ const FreeCourses = ({ data, loading }) => {
 
       {/* Course Grid */}
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {data.map((course) => (
+        {freeCoursesData?.data?.map((course) => (
           <div
             key={course.id}
             className="flex flex-col overflow-hidden rounded bg-white shadow-lg transition-transform duration-300  border border-yellow-100"
@@ -79,24 +66,32 @@ const FreeCourses = ({ data, loading }) => {
                 </span>
               </div>
 
-              {/* Watch button */}
-              <div className="mt-5">
+              <div className="mt-5 grid grid-cols-3 gap-2">
+                {/* Watch */}
                 <button
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      return;
-                    }
-
-                    setSelectedCourse(course);
-                  }}
-                  disabled={!isAuthenticated}
-                  className={`w-full rounded-lg px-4 py-2.5 text-center font-medium transition-colors duration-200 ${
-                    isAuthenticated
-                      ? "cursor-pointer bg-yellow-400 text-black hover:bg-yellow-500"
-                      : "cursor-not-allowed bg-gray-200 text-gray-500"
-                  }`}
+                  type="button"
+                  onClick={() => setSelectedCourse(course)}
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-yellow-400 px-3 py-2.5 text-sm font-medium text-black transition-all duration-200 hover:bg-yellow-500 hover:shadow-md active:scale-95"
                 >
-                  {isAuthenticated ? "Watch Now" : "Login to Watch"}
+                  Watch
+                </button>
+
+                {/* Edit */}
+                <button
+                  type="button"
+                  onClick={() => handleEdit(course)}
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700 transition-all duration-200 hover:bg-blue-100 hover:shadow-md active:scale-95"
+                >
+                  Edit
+                </button>
+
+                {/* Delete */}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(course)}
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-100 hover:shadow-md active:scale-95"
+                >
+                  Delete
                 </button>
               </div>
             </div>
@@ -112,7 +107,7 @@ const FreeCourses = ({ data, loading }) => {
         />
       )}
       <div className="text-center text-lg text-gray-900 mt-8">
-        {data && data.length > 7 && (
+        {freeCoursesData && freeCoursesData.length > 7 && (
           <Link
             href="/free-courses"
             className="py-2 px-4 rounded bg-yellow-400 text-black text-sm font-medium hover:bg-yellow-500 transition-colors duration-200"
@@ -125,4 +120,4 @@ const FreeCourses = ({ data, loading }) => {
   );
 };
 
-export default FreeCourses;
+export default FreeVideoList;
