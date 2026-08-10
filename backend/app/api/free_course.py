@@ -1,10 +1,4 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    File,
-    Form,
-    UploadFile,
-)
+from fastapi import APIRouter, Depends, File, Form, UploadFile, HTTPException
 from sqlalchemy.orm import Session
 
 from app.dependencies.database import get_db
@@ -18,6 +12,7 @@ from app.schemas.free_video import (
 )
 from app.models.free_video import CourseStatus
 from app.core.dependencies import admin_instructor_required
+from app.repositories.free_course import FreeCourseRepository
 
 router = APIRouter(
     prefix="/free-courses",
@@ -108,3 +103,22 @@ async def delete_free_course(
         course_id=course_id,
         current_user=current_user,
     )
+
+
+@router.get("/{slug}")
+def get_course_by_slug(
+    slug: str,
+    db: Session = Depends(get_db),
+):
+    course = FreeCourseRepository.get_by_slug(
+        db=db,
+        slug=slug,
+    )
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Free course not found",
+        )
+
+    return course
