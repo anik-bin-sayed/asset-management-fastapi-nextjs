@@ -80,20 +80,6 @@ const FreeCourses = ({
                 </span>
               </div>
 
-              {/* Tags (if any) */}
-              {course.tags && course.tags.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {course.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-
               {/* Watch button */}
               <div className="mt-5">
                 <button

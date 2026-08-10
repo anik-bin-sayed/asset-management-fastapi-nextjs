@@ -78,7 +78,7 @@ const MobileNavUserDetails = ({ profileData }) => {
 
           {profileData?.role === "admin" && (
             <Link
-              href="/all-users"
+              href="/users"
               className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
             >
               <FaUser />

@@ -1,19 +1,53 @@
-import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
+import {
+  useDeleteFreeCourseMutation,
+  useGetAllFreeCoursesQuery,
+} from "@/lib/features/courses/free-course-api";
 import React, { useState } from "react";
 import VideoModal from "../Home/VideoModal";
 import Link from "next/link";
 import Image from "next/image";
 import SkeletonLoader from "@/utils/SkeletonLoader";
+import { useRouter } from "next/navigation";
 
 const FreeVideoList = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
 
-  const { data: freeCoursesData, isLoading: isFreeCoursesLoading } =
-    useGetAllFreeCoursesQuery();
+  const [deletingId, setDeletingId] = useState(null);
+
+  const router = useRouter();
+
+  // redux
+  const {
+    data: freeCoursesData,
+    isLoading: isFreeCoursesLoading,
+    refetch,
+  } = useGetAllFreeCoursesQuery();
+  const [deleteFreeCourse, { isLoading: deleting }] =
+    useDeleteFreeCourseMutation();
 
   if (isFreeCoursesLoading) {
     return <SkeletonLoader />;
   }
+
+  const handleEdit = (course) => {
+    console.log(course?.slug);
+    router.push(
+      `/manage-course?tab=edit-course&slug=${encodeURIComponent(course.slug)}`,
+    );
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setDeletingId(id);
+      await deleteFreeCourse(id).unwrap();
+      refetch();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDeletingId(null);
+    }
+    console.log(id);
+  };
 
   return (
     <div className="px-4 py-12">
@@ -88,10 +122,10 @@ const FreeVideoList = () => {
                 {/* Delete */}
                 <button
                   type="button"
-                  onClick={() => handleDelete(course)}
+                  onClick={() => handleDelete(course?.id)}
                   className="flex items-center justify-center gap-1.5 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-100 hover:shadow-md active:scale-95"
                 >
-                  Delete
+                  {deletingId == course?.id ? "Deleting" : "Delete"}
                 </button>
               </div>
             </div>

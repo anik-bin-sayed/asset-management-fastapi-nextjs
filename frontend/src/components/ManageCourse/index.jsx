@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { cloneElement, useEffect, useState } from "react";
 import Link from "next/link";
 import CreateFreeVideos from "./CreateFreeVideos";
 import { IoReorderThreeOutline } from "react-icons/io5";
@@ -11,31 +11,36 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import FreeVideoList from "./FreeVideoList";
+import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
+import { TbFreezeColumn } from "react-icons/tb";
+import { FaBook } from "react-icons/fa6";
+import EditCourse from "./EditCourse";
 
 const CoursesIcon = () => (
-  <span className="text-xl">
-    <MdOutlineVideoStable />
+  <span className="text-2xl">
+    <FaBook />
   </span>
 );
 const FreeVideosIcon = () => (
-  <span className="text-xl">
-    <MdOutlineVideoStable />
+  <span className="text-2xl">
+    <TbFreezeColumn />
   </span>
 );
 const CreateIcon = () => (
-  <span className="text-xl">
+  <span className="text-2xl">
     <CiCirclePlus />
   </span>
 );
+
 const SettingsIcon = () => (
-  <span className="text-xl">
+  <span className="text-2xl">
     <MdManageHistory />
   </span>
 );
 
 const ManageCourse = ({ profileData }) => {
-  // Mobile sidebar toggle
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -66,12 +71,15 @@ const ManageCourse = ({ profileData }) => {
             <p className="text-gray-600">Edit course details, delete, etc.</p>
           </div>
         );
+
+      case "edit-course":
+        return <EditCourse />;
+
       default:
         return <div className="p-6">Select an option</div>;
     }
   };
 
-  // Navigation items
   const navItems = [
     { id: "all-courses", label: "All Courses", icon: <CoursesIcon /> },
     { id: "all-free-videos", label: "Free Videos", icon: <FreeVideosIcon /> },
@@ -82,6 +90,24 @@ const ManageCourse = ({ profileData }) => {
     },
     { id: "manage-course", label: "Manage Course", icon: <SettingsIcon /> },
   ];
+
+  useEffect(() => {
+    const savedState = localStorage.getItem("manage-sidebar-collapsed");
+
+    if (savedState !== null) {
+      setIsSidebarCollapsed(savedState === "true");
+    }
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const newState = !prev;
+
+      localStorage.setItem("manage-sidebar-collapsed", String(newState));
+
+      return newState;
+    });
+  };
 
   const handleTabChange = (tabId) => {
     router.push(`?tab=${tabId}`, {
@@ -102,28 +128,62 @@ const ManageCourse = ({ profileData }) => {
       )}
 
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 flex flex-col`}
+        className={`
+          fixed lg:static
+          inset-y-0 left-0 z-30
+          ${isSidebarCollapsed ? "w-20" : "w-64"}
+          bg-white
+          shadow-lg
+          flex flex-col
+          transition-all duration-300 ease-in-out
+          ${
+            isSidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
+        `}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center justify-center gap-2 mb-4"
-          >
-            <span className="text-xl font-bold text-gray-900">Learn </span>
-            <span className="text-xl bg-yellow-500 rounded px-2 py-1 font-bold text-gray-900">
-              Hub
-            </span>
-          </Link>
+        <div
+          className={`
+    flex items-center
+    h-16
+    px-3
+    border-b border-gray-200
+    ${isSidebarCollapsed ? "justify-center" : "justify-between"}
+  `}
+        >
+          {!isSidebarCollapsed && (
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-xl font-bold text-gray-900">Learn</span>
 
+              <span className="text-xl bg-yellow-500 rounded px-2 py-1 font-bold text-gray-900">
+                Hub
+              </span>
+            </Link>
+          )}
+
+          {/* Desktop collapse button */}
           <button
-            className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+            type="button"
+            onClick={toggleSidebar}
+            title={isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
+            className="rounded-md p-2 hover:bg-gray-100 transition-colors "
+          >
+            {isSidebarCollapsed ? (
+              <LuPanelLeftOpen className="text-2xl cursor-pointer text-gray-600 hover:text-black" />
+            ) : (
+              <LuPanelLeftClose className="text-2xl cursor-pointer text-gray-600 hover:text-black" />
+            )}
+          </button>
+
+          {/* Mobile close */}
+          <button
+            type="button"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
             onClick={() => setIsSidebarOpen(false)}
           >
-            <RxCross2 />
+            <RxCross2 size={20} />
           </button>
         </div>
 
@@ -133,18 +193,44 @@ const ManageCourse = ({ profileData }) => {
             <button
               key={item.id}
               onClick={() => handleTabChange(item.id)}
-              className={`flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === item.id
-                  ? "bg-yellow-100 text-yellow-800"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
+              title={isSidebarCollapsed ? item.label : undefined}
+              className={`
+        flex items-center
+        w-full
+        h-11
+        cursor-pointer
+        rounded-lg
+        text-sm font-medium
+        transition-all duration-200
+        ${isSidebarCollapsed ? "justify-center px-0" : "justify-start px-3"}
+        ${
+          activeTab === item.id
+            ? "bg-yellow-400 text-black"
+            : "text-gray-500 hover:bg-gray-100"
+        }
+      `}
             >
-              <span className="mr-3">{item.icon}</span>
-              {item.label}
+              <span
+                className={`
+          flex items-center justify-center
+          shrink-0
+          ${isSidebarCollapsed ? "" : "mr-3"}
+        `}
+              >
+                {cloneElement(item.icon, {
+                  className: `
+            transition-all duration-200
+            ${isSidebarCollapsed ? "text-4xl" : "text-xl"}
+          `,
+                })}
+              </span>
+
+              {!isSidebarCollapsed && (
+                <span className="truncate">{item.label}</span>
+              )}
             </button>
           ))}
         </nav>
-
         {/* Sidebar footer (optional) */}
         <div className="p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500">Admin Panel v1.0</p>

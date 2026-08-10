@@ -22,6 +22,23 @@ export const freeCourseApi = createApi({
       }),
       providesTags: ["Course"],
     }),
+
+    deleteFreeCourse: builder.mutation({
+      query: (id) => ({
+        url: `/free-courses/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    getCourseBySlug: builder.query({
+      query: (slug) => ({
+        url: `/free-courses/${slug}`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
     // create free videos
     createFreeVideo: builder.mutation({
       query: (data) => ({
@@ -38,4 +55,6 @@ export const {
   useGetSomeFreeCourseQuery,
   useGetAllFreeCoursesQuery,
   useCreateFreeVideoMutation,
+  useDeleteFreeCourseMutation,
+  useGetCourseBySlugQuery,
 } = freeCourseApi;
