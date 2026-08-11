@@ -103,6 +103,7 @@ class UserService:
             user=user,
         )
 
+    @staticmethod
     def refresh(
         db: Session,
         refresh_token: str,
@@ -133,10 +134,7 @@ class UserService:
             )
 
         access_token = create_access_token(
-            {
-                "sub": str(user.id),
-                "type": "access",
-            }
+            {"sub": str(user.id), "type": "access", "role": user.role}
         )
 
         return access_token

@@ -79,15 +79,34 @@ def get_all_free_courses(
 @router.patch("/{course_id}")
 async def update_free_course(
     course_id: int,
-    data: FreeCourseUpdate,
+    title: str | None = Form(None),
+    short_description: str | None = Form(None),
+    description: str | None = Form(None),
+    language: str | None = Form(None),
+    video_url: str | None = Form(None),
+    duration: str | None = Form(None),
+    tags: str | None = Form(None),
+    status: CourseStatus | None = Form(None),
+    thumbnail: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    data = FreeCourseUpdate(
+        title=title,
+        short_description=short_description,
+        description=description,
+        language=language,
+        video_url=video_url,
+        duration=duration,
+        tags=tags.split(",") if tags else None,
+        status=status,
+    )
+
     return await FreeCourseService.update(
         db=db,
         course_id=course_id,
         data=data,
-        thumbnail=None,
+        thumbnail=thumbnail,
         current_user=current_user,
     )
 
