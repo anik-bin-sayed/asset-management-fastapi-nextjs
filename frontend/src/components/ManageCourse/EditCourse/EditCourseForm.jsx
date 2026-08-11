@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { IoMdClose } from "react-icons/io";
+import { useUpdateFreeCourseMutation } from "@/lib/features/courses/free-course-api";
 
 const initialState = {
   title: "",
@@ -15,7 +16,7 @@ const initialState = {
   thumbnail: "",
 };
 
-const EditCourseForm = ({ editData, isSubmitting = false, onSubmit }) => {
+const EditCourseForm = ({ editData }) => {
   const [formData, setFormData] = useState(initialState);
 
   const [thumbnailFile, setThumbnailFile] = useState(null);
@@ -23,6 +24,9 @@ const EditCourseForm = ({ editData, isSubmitting = false, onSubmit }) => {
 
   const fileInputRef = useRef(null);
   const router = useRouter();
+
+  const [updateFreeCourse, { isLoading: isSubmitting }] =
+    useUpdateFreeCourseMutation();
 
   useEffect(() => {
     if (editData) {
@@ -68,16 +72,18 @@ const EditCourseForm = ({ editData, isSubmitting = false, onSubmit }) => {
     }
   };
 
-  const handleCancel = () => {
-    router.back();
-  };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
+      if (
+        key !== "thumbnail" &&
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ) {
         data.append(key, value);
       }
     });
@@ -87,10 +93,26 @@ const EditCourseForm = ({ editData, isSubmitting = false, onSubmit }) => {
     }
 
     for (const [key, value] of data.entries()) {
-      console.log(key, value);
+      if (value instanceof File) {
+        console.log(key, {
+          name: value.name,
+          type: value.type,
+          size: value.size,
+        });
+      } else {
+        console.log(key, value);
+      }
     }
 
-    onSubmit(data);
+    try {
+      await updateFreeCourse({
+        id: editData?.id,
+        data,
+      }).unwrap();
+      router.back();
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
   };
 
   return (
@@ -345,7 +367,7 @@ const EditCourseForm = ({ editData, isSubmitting = false, onSubmit }) => {
         <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
           <button
             type="button"
-            onClick={handleCancel}
+            onClick={() => router.back()}
             className="rounded-lg px-6 py-3 font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition"
           >
             Cancel

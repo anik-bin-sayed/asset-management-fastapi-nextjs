@@ -31,6 +31,15 @@ export const freeCourseApi = createApi({
       invalidatesTags: ["Course"],
     }),
 
+    updateFreeCourse: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/free-courses/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
     getCourseBySlug: builder.query({
       query: (slug) => ({
         url: `/free-courses/${slug}`,
@@ -57,4 +66,5 @@ export const {
   useCreateFreeVideoMutation,
   useDeleteFreeCourseMutation,
   useGetCourseBySlugQuery,
+  useUpdateFreeCourseMutation,
 } = freeCourseApi;

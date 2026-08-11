@@ -4,6 +4,7 @@ import StoreProvider from "./StoreProvider";
 import { Toaster } from "sonner";
 
 import LayoutWrapper from "@/components/LayoutWrapper";
+import TokenRefresher from "@/components/TokenRefresher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <StoreProvider>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <LayoutWrapper>
+            <TokenRefresher />
+            {children}
+          </LayoutWrapper>
         </StoreProvider>
         <Toaster position="top-right" richColors />
       </body>
