@@ -98,7 +98,7 @@ class Course(Base):
         default=CourseStatus.DRAFT,
     )
 
-    course_type: Mapped[CourseStatus] = mapped_column(
+    course_type: Mapped[CourseType] = mapped_column(
         SqlEnum(CourseType),
         default=CourseType.FREE,
         nullable=False,
@@ -120,6 +120,16 @@ class Course(Base):
         nullable=False,
     )
 
+    start_date: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+    )
+
+    end_date: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
@@ -136,14 +146,14 @@ class Course(Base):
         back_populates="courses",
     )
 
-    instructor = relationship(
+    user = relationship(
         "User",
         back_populates="courses",
     )
 
-    sections = relationship(
-        "Section",
+    modules = relationship(
+        "Module",
         back_populates="course",
         cascade="all, delete-orphan",
-        order_by="Section.position",
+        order_by="Module.position",
     )
