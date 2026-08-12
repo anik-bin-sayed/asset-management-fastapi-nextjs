@@ -149,12 +149,12 @@ const Navbar = () => {
           >
             All Courses
           </a>
-          <a
-            href="#"
+          <Link
+            href="/free-courses"
             className="text-gray-700 font-medium transition-colors duration-200 py-1 px-2 rounded-lg hover:bg-gray-100 hover:text-yellow-600"
           >
             Free Courses
-          </a>
+          </Link>
 
           {profileData && profileData?.role === "admin" && (
             <div ref={dropdownRef} className="relative">
