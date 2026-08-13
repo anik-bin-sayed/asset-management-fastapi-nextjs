@@ -55,3 +55,7 @@ class CourseRepository:
         )
 
         return courses, total
+
+    @staticmethod
+    def get_by_id(db: Session, course_id: int):
+        return db.query(Course).filter(Course.id == course_id).first()

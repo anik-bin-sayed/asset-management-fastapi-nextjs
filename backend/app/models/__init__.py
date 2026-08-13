@@ -4,3 +4,4 @@ from .course import Course
 from .free_video import FreeVideo
 from .module import Module
 from .lesson import Lesson
+from .enrollment import Enrollment

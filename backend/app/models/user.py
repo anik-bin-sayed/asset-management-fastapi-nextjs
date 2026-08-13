@@ -99,7 +99,7 @@ class User(Base):
 
     courses = relationship(
         "Course",
-        back_populates="instructor",
+        back_populates="user",
     )
 
     refresh_token: Mapped[str | None] = mapped_column(
@@ -114,5 +114,11 @@ class User(Base):
     free_courses = relationship(
         "FreeVideo",
         back_populates="creator",
+        cascade="all, delete-orphan",
+    )
+
+    enrollments = relationship(
+        "Enrollment",
+        back_populates="student",
         cascade="all, delete-orphan",
     )

@@ -157,3 +157,9 @@ class Course(Base):
         cascade="all, delete-orphan",
         order_by="Module.position",
     )
+
+    enrollments = relationship(
+        "Enrollment",
+        back_populates="course",
+        cascade="all, delete-orphan",
+    )
