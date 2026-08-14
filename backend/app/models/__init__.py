@@ -5,3 +5,4 @@ from .free_video import FreeVideo
 from .module import Module
 from .lesson import Lesson
 from .enrollment import Enrollment
+from .payment import Payment

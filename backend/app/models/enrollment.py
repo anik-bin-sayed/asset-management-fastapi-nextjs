@@ -79,3 +79,10 @@ class Enrollment(Base):
         "User",
         back_populates="enrollments",
     )
+
+    payment = relationship(
+        "Payment",
+        back_populates="enrollment",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )

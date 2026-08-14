@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
+from datetime import datetime
 
 from app.models.course import CourseType
 
@@ -41,6 +42,9 @@ class CourseResponse(BaseModel):
     price: Decimal
     discount_price: Decimal | None
     course_type: str
+
+    start_date: datetime | None
+    end_date: datetime | None
 
     level: CourseLevel
     language: CourseLanguage

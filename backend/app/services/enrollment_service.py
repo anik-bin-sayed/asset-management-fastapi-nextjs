@@ -8,6 +8,8 @@ from app.models.enrollment import Enrollment, EnrollmentStatus
 from app.repositories.course_repository import CourseRepository
 from app.repositories.enrollment_repository import EnrollmentRepository
 
+from app.models.course import CourseType
+
 
 class EnrollmentService:
 
@@ -29,14 +31,12 @@ class EnrollmentService:
                 detail="Course not found",
             )
 
-        # Course must be published
         if course.status != CourseStatus.PUBLISHED:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="This course is not available for enrollment",
             )
 
-        # Enrollment must happen before course starts
         now = datetime.utcnow()
 
         if now >= course.start_date:
@@ -45,7 +45,6 @@ class EnrollmentService:
                 detail="Enrollment is closed because the course has already started",
             )
 
-        # Check duplicate enrollment
         existing_enrollment = EnrollmentRepository.get_by_student_and_course(
             db,
             current_user.id,
@@ -58,10 +57,15 @@ class EnrollmentService:
                 detail="You are already enrolled in this course",
             )
 
+        if course.course_type == CourseType.FREE:
+            enrollment_status = EnrollmentStatus.ACTIVE
+        else:
+            enrollment_status = EnrollmentStatus.PENDING
+
         enrollment = Enrollment(
             student_id=current_user.id,
             course_id=course_id,
-            status=EnrollmentStatus.PENDING,
+            status=enrollment_status,
         )
 
         return EnrollmentRepository.create(
