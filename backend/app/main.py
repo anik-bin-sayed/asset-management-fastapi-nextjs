@@ -1,13 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.auth import router as authRouter
-from app.api.category import router as categoryRouter
-from app.api.course import router as courseRouter
-from app.api.profile import router as profileRouter
-from app.api.users import router as usersRouter
-from app.api.free_course import router as FreeCurseRouter
-from app.api.enrollments import router as enrollmentRouter
+from app.api.routes import api_router
 
 # initialize app
 app = FastAPI(title="Course Management API")
@@ -25,13 +19,7 @@ app.add_middleware(
 )
 
 # router
-app.include_router(authRouter, prefix="/api")
-app.include_router(categoryRouter, prefix="/api")
-app.include_router(courseRouter, prefix="/api")
-app.include_router(profileRouter, prefix="/api")
-app.include_router(usersRouter, prefix="/api")
-app.include_router(FreeCurseRouter, prefix="/api")
-app.include_router(enrollmentRouter, prefix="/api")
+app.include_router(api_router, prefix="/api")
 
 
 @app.get("/")
