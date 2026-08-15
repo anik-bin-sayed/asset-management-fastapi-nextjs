@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import HTTPException, status
 
 from sqlalchemy.orm import Session
@@ -36,6 +38,8 @@ class PaymentService:
 
         course = enrollment.course
 
+        print("course ------------------", course.course_type)
+
         if course.course_type != CourseType.PAID:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -61,3 +65,30 @@ class PaymentService:
         )
 
         return PaymentRepository.create(db, payment)
+
+    @staticmethod
+    def mark_success(db: Session, payment_id: int, transaction_id: str):
+        payment = db.query(Payment).filter(Payment.id == payment_id).first()
+
+        if not payment:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Payment")
+
+        if payment.status == PaymentStatus.SUCCESS:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Payment is already successful",
+            )
+
+        payment.status = PaymentStatus.SUCCESS
+        payment.transaction_id = transaction_id
+        payment.paid_at = datetime.utcnow()
+
+        enrollment = payment.enrollment
+
+        enrollment.status = EnrollmentStatus.ACTIVE
+        enrollment.activated_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(payment)
+
+        return payment

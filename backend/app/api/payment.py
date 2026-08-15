@@ -1,15 +1,12 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import student_required
+from app.core.dependencies import student_required, admin_instructor_required
 from app.dependencies.database import get_db
 
 from app.models.user import User
 
-from app.schemas.payment import (
-    PaymentCreate,
-    PaymentResponse,
-)
+from app.schemas.payment import PaymentCreate, PaymentResponse, PaymentSuccessRequest
 
 from app.services.payment import PaymentService
 
@@ -33,4 +30,18 @@ def create_payment(
         db=db,
         enrollment_id=data.enrollment_id,
         current_user=current_user,
+    )
+
+
+@router.post("/{payment_id}/success", response_model=PaymentResponse)
+def mark_payment_success(
+    payment_id: int,
+    data: PaymentSuccessRequest,
+    db: Session = Depends(get_db),
+    # current_user: User = Depends(admin_instructor_required),
+):
+    return PaymentService.mark_success(
+        db=db,
+        payment_id=payment_id,
+        transaction_id=data.transaction_id,
     )

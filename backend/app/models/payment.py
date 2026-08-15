@@ -45,7 +45,7 @@ class Payment(Base):
     )
 
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, nullable=False
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
     enrollment = relationship("Enrollment", back_populates="payment")
