@@ -25,8 +25,6 @@ export function proxy(request) {
     try {
       const decoded = jwtDecode(token);
 
-      console.log("decoded", decoded);
-
       if (decoded.role !== "admin") {
         return NextResponse.redirect(new URL("/", request.url));
       }

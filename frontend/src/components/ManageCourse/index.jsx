@@ -12,9 +12,12 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import FreeVideoList from "./FreeVideoList";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
-import { TbFreezeColumn } from "react-icons/tb";
+import { TbCategory, TbFreezeColumn } from "react-icons/tb";
 import { FaBook } from "react-icons/fa6";
 import EditCourse from "./EditCourse";
+import AllCourse from "./AllCourse";
+import CreateCourse from "./CreateCourse";
+import CategoryList from "./CategoryList";
 
 const CoursesIcon = () => (
   <span className="text-2xl">
@@ -38,6 +41,12 @@ const SettingsIcon = () => (
   </span>
 );
 
+const CategoryIcon = () => (
+  <span className="text-2xl">
+    <TbCategory />
+  </span>
+);
+
 const ManageCourse = ({ profileData }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -50,30 +59,20 @@ const ManageCourse = ({ profileData }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "all-courses":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">All Courses</h2>
-            <p className="text-gray-600">
-              List of all courses (paid + free) will appear here.
-            </p>
-            {/* You can put your course table/list here */}
-          </div>
-        );
+        return <AllCourse />;
       case "all-free-videos":
         return <FreeVideoList />;
 
       case "create-free-video":
         return <CreateFreeVideos />;
-      case "manage-course":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Manage Course Settings</h2>
-            <p className="text-gray-600">Edit course details, delete, etc.</p>
-          </div>
-        );
+      case "create-course":
+        return <CreateCourse />;
 
       case "edit-course":
         return <EditCourse />;
+
+      case "category-list":
+        return <CategoryList />;
 
       default:
         return <div className="p-6">Select an option</div>;
@@ -88,7 +87,8 @@ const ManageCourse = ({ profileData }) => {
       label: "Create Free Video",
       icon: <CreateIcon />,
     },
-    { id: "manage-course", label: "Manage Course", icon: <SettingsIcon /> },
+    { id: "create-course", label: "Create Course", icon: <SettingsIcon /> },
+    { id: "category-list", label: "Categories", icon: <CategoryIcon /> },
   ];
 
   useEffect(() => {
