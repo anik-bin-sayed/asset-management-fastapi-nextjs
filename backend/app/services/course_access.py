@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.repositories.enrollment import EnrollmentRepository
+from app.repositories.enrollment_repository import EnrollmentRepository
 
 
 class CourseAccessService:
