@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.enrollment import Enrollment
+from app.models.enrollment import Enrollment, EnrollmentStatus
 
 
 class EnrollmentRepository:
@@ -34,3 +34,19 @@ class EnrollmentRepository:
         db.refresh(enrollment)
 
         return enrollment
+
+    @staticmethod
+    def get_active_enrollment(
+        db: Session,
+        student_id: str,
+        course_id: int,
+    ):
+        return (
+            db.query(Enrollment)
+            .filter(
+                Enrollment.student_id == student_id,
+                Enrollment.course_id == course_id,
+                Enrollment.status == EnrollmentStatus.ACTIVE,
+            )
+            .first()
+        )

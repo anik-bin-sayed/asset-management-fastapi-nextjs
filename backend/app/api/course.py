@@ -10,8 +10,11 @@ from app.models.user import User
 
 from app.schemas.course import CourseCreate, CourseResponse, CourseListResponse
 
+from app.schemas.module import ModuleResponse
+from app.services.module import ModuleService
+
 from app.services.course import CourseService
-from app.core.dependencies import admin_instructor_required
+from app.core.dependencies import admin_instructor_required, student_required
 
 router = APIRouter(
     prefix="/courses",
@@ -59,4 +62,20 @@ def get_courses(
         language=language,
         page=page,
         limit=limit,
+    )
+
+
+@router.get(
+    "/{course_id}/modules",
+    response_model=list[ModuleResponse],
+)
+def get_course_modules(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(student_required),
+):
+    return ModuleService.get_course_modules(
+        db=db,
+        course_id=course_id,
+        student_id=current_user.id,
     )
