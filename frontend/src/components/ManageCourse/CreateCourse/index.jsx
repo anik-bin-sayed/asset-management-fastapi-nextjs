@@ -6,6 +6,7 @@ import CreateCategoryModal from "../CategoryModal/CreateCategory";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { LuGalleryThumbnails } from "react-icons/lu";
 import Image from "next/image";
+import { useCreateCourseMutation } from "@/lib/features/courses/paid-course-api";
 
 const initialState = {
   title: "",
@@ -29,6 +30,7 @@ const CreateCourse = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   const { data: categories, isLoading } = useGetAllCategoryQuery();
+  const [createCourse, { isLoading: creating }] = useCreateCourseMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,12 +74,30 @@ const CreateCourse = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
-  };
+    const data = new FormData();
 
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        data.append(key, value);
+      }
+    });
+
+    for (const [key, value] of data.entries()) {
+      console.log(key, value);
+    }
+
+    try {
+      const res = await createCourse(data).unwrap();
+
+      setFormData(initialState);
+    } catch (error) {
+      console.log("Status:", error?.status);
+      console.log("Error:", error?.data);
+    }
+  };
   return (
     <>
       <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
@@ -434,7 +454,8 @@ const CreateCourse = () => {
                       src={URL.createObjectURL(formData.thumbnail)}
                       alt="Course thumbnail preview"
                       className="h-64 w-full object-cover"
-                      fill
+                      width={50}
+                      height={50}
                     />
 
                     {/* Overlay */}
