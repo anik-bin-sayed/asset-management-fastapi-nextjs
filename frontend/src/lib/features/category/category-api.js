@@ -31,6 +31,15 @@ export const categoryApi = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
+
+    updateCategory: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/categories/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Category"],
+    }),
   }),
 });
 
@@ -38,4 +47,5 @@ export const {
   useCreateCategoryMutation,
   useGetAllCategoryQuery,
   useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
 } = categoryApi;

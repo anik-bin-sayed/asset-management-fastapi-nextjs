@@ -1,8 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import CategoryModal from "../CategoryModal";
 import { useGetAllCategoryQuery } from "@/lib/features/category/category-api";
+import CreateCategoryModal from "../CategoryModal/CreateCategory";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { LuGalleryThumbnails } from "react-icons/lu";
+import Image from "next/image";
 
 const initialState = {
   title: "",
@@ -11,12 +14,14 @@ const initialState = {
   description: "",
   price: "",
   discount_price: "",
+  discount_percentage: "",
   level: "beginner",
   language: "bangla",
   course_type: "paid",
   category_id: "",
   start_date: "",
   end_date: "",
+  thumbnail: null,
 };
 
 const CreateCourse = () => {
@@ -28,9 +33,42 @@ const CreateCourse = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    setFormData((prev) => {
+      const updatedData = {
+        ...prev,
+        [name]: value,
+      };
+
+      if (name === "price" || name === "discount_percentage") {
+        const price = Number(name === "price" ? value : prev.price);
+
+        const discountPercentage = Number(
+          name === "discount_percentage" ? value : prev.discount_percentage,
+        );
+
+        if (price > 0 && discountPercentage > 0) {
+          const discountAmount = (price * discountPercentage) / 100;
+
+          const discountPrice = price - discountAmount;
+
+          updatedData.discount_price = discountPrice.toFixed(2);
+        } else {
+          updatedData.discount_price = "";
+        }
+      }
+
+      return updatedData;
+    });
+  };
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      thumbnail: file,
     }));
   };
 
@@ -58,7 +96,8 @@ const CreateCourse = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="mb-6">
+              {/* Header */}
+              <div className="mb-7">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Basic Information
                 </h2>
@@ -68,82 +107,117 @@ const CreateCourse = () => {
                 </p>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid gap-x-6 gap-y-6 md:grid-cols-2">
+                {/* Course Title */}
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="course-title"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     Course Title
                   </label>
 
                   <input
+                    id="course-title"
                     type="text"
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="e.g. Complete Python Programming"
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-4 focus:ring-gray-900/5"
                   />
+
+                  <p className="mt-1.5 text-xs text-gray-400">
+                    Choose a clear and descriptive title for your course.
+                  </p>
                 </div>
 
                 {/* Category */}
-                <div className="w-full">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Category
-                  </label>
+                <div>
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <label
+                      htmlFor="category"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Category
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsCategoryModalOpen(true)}
+                      className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
+                    >
+                      + Create Category
+                    </button>
+                  </div>
 
                   <select
+                    id="category"
                     name="category_id"
                     value={formData.category_id}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                    className="w-full cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-gray-900 focus:ring-4 focus:ring-gray-900/5"
                   >
                     <option value="">Select category</option>
-                    {categories &&
-                      categories?.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
+
+                    {categories?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
                   </select>
-                  <div>
-                    <button
-                      onClick={() => setIsCategoryModalOpen(true)}
-                      className="text-sm mt-2 ml-2 hover:underline cursor-pointer text-gray-400"
-                    >
-                      Create Category
-                    </button>
-                  </div>
+
+                  <p className="mt-1.5 text-xs text-gray-400">
+                    Select the category that best matches your course.
+                  </p>
                 </div>
 
                 {/* Short Description */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                <div>
+                  <label
+                    htmlFor="short-description"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     Short Description
                   </label>
 
                   <textarea
+                    id="short-description"
                     name="short_description"
                     value={formData.short_description}
                     onChange={handleChange}
-                    rows={3}
+                    rows={4}
                     placeholder="Write a short description of your course..."
-                    className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                    className="w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-4 focus:ring-gray-900/5"
                   />
+
+                  <p className="mt-1.5 text-xs text-gray-400">
+                    Keep it short and engaging.
+                  </p>
                 </div>
 
                 {/* Description */}
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="course-description"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     Course Description
                   </label>
 
                   <textarea
+                    id="course-description"
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
                     rows={7}
                     placeholder="Write the full course description..."
-                    className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                    className="w-full resize-y rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm leading-6 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-4 focus:ring-gray-900/5"
                   />
+
+                  <p className="mt-1.5 text-xs text-gray-400">
+                    Provide detailed information about what students will learn.
+                  </p>
                 </div>
               </div>
             </div>
@@ -225,7 +299,7 @@ const CreateCourse = () => {
                 </p>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid gap-5 md:grid-cols-3">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Price
@@ -233,7 +307,7 @@ const CreateCourse = () => {
 
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">
-                      ৳
+                      <TbCurrencyTaka />
                     </span>
 
                     <input
@@ -242,11 +316,37 @@ const CreateCourse = () => {
                       value={formData.price}
                       onChange={handleChange}
                       placeholder="1500"
+                      min="0"
                       className="w-full rounded-xl border border-gray-300 py-3 pl-9 pr-4 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
                     />
                   </div>
                 </div>
 
+                {/* Discount Percentage */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Discount Percentage
+                  </label>
+
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">
+                      %
+                    </span>
+
+                    <input
+                      type="number"
+                      name="discount_percentage"
+                      value={formData.discount_percentage}
+                      onChange={handleChange}
+                      placeholder="20"
+                      min="0"
+                      max="100"
+                      className="w-full rounded-xl border border-gray-300 py-3 pl-9 pr-4 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                    />
+                  </div>
+                </div>
+
+                {/* Discount Price */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Discount Price
@@ -254,16 +354,16 @@ const CreateCourse = () => {
 
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">
-                      ৳
+                      <TbCurrencyTaka />
                     </span>
 
                     <input
                       type="number"
                       name="discount_price"
                       value={formData.discount_price}
-                      onChange={handleChange}
-                      placeholder="999"
-                      className="w-full rounded-xl border border-gray-300 py-3 pl-9 pr-4 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                      placeholder="1200"
+                      disabled
+                      className="w-full rounded-xl border border-gray-300 bg-gray-50 py-3 pl-9 pr-4 text-sm outline-none disabled:cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -324,21 +424,48 @@ const CreateCourse = () => {
                 </p>
               </div>
 
-              <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 px-6 py-12 text-center transition hover:border-gray-500">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-                  📷
-                </div>
+              <label
+                htmlFor="thumbnail"
+                className="group relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-gray-300 text-center transition hover:border-gray-500"
+              >
+                {formData.thumbnail ? (
+                  <div className="relative w-full">
+                    <Image
+                      src={URL.createObjectURL(formData.thumbnail)}
+                      alt="Course thumbnail preview"
+                      className="h-64 w-full object-cover"
+                      fill
+                    />
 
-                <p className="text-sm font-medium text-gray-700">
-                  Click to upload thumbnail
-                </p>
+                    {/* Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
+                      <div className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-800">
+                        Change Thumbnail
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="px-6 py-12 flex flex-col items-center justify-center ">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                      <LuGalleryThumbnails className="text-xl text-gray-500" />
+                    </div>
 
-                <p className="mt-1 text-xs text-gray-400">PNG, JPG or WEBP</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Click to upload thumbnail
+                    </p>
+
+                    <p className="mt-1 text-xs text-gray-400">
+                      PNG, JPG or WEBP
+                    </p>
+                  </div>
+                )}
 
                 <input
+                  id="thumbnail"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   className="hidden"
+                  onChange={handleThumbnailChange}
                 />
               </label>
             </div>
@@ -346,15 +473,8 @@ const CreateCourse = () => {
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pb-8">
               <button
-                type="button"
-                className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-
-              <button
                 type="submit"
-                className="rounded-xl bg-gray-900 px-7 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+                className="rounded-xl w-full bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition hover:bg-yellow-500 cursor-pointer"
               >
                 Create Course
               </button>
@@ -363,7 +483,7 @@ const CreateCourse = () => {
         </div>
       </div>
 
-      <CategoryModal
+      <CreateCategoryModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
       />

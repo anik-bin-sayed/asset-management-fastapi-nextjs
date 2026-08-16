@@ -1,12 +1,15 @@
-import { useCreateCategoryMutation } from "@/lib/features/category/category-api";
-import { useState } from "react";
+import { useUpdateCategoryMutation } from "@/lib/features/category/category-api";
+import React, { useEffect, useState } from "react";
 
-const CategoryModal = ({ isOpen, onClose }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
-  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+const initialState = {
+  name: "",
+  description: "",
+};
+const UpdateCategoryModal = ({ onClose, setCategoryData, categoryData }) => {
+  const [formData, setFormData] = useState(initialState);
+  const [error, setError] = useState("");
+  //   redux
+  const [updateCategory, { isLoading, isError }] = useUpdateCategoryMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,23 +20,34 @@ const CategoryModal = ({ isOpen, onClose }) => {
     }));
   };
 
-  if (!isOpen) return null;
+  const handleClose = () => {
+    onClose();
+    setCategoryData(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await createCategory(formData).unwrap();
-      console.log(res);
+      const res = await updateCategory({
+        id: categoryData?.id,
+        data: formData,
+      }).unwrap();
+      //   console.log(res);
     } catch (error) {
-      console.log("Status:", error?.status);
-      console.log("Error:", error?.data);
-
-      if (error?.data?.detail) {
-        console.log("Detail:", error.data.detail);
-      }
+      //   console.log(error?.data?.detail || "Something wrong");
+      setError(error?.data?.detail || "Something wrong");
+    } finally {
+      onClose();
     }
   };
+
+  useEffect(() => {
+    setFormData({
+      name: categoryData?.name || "",
+      description: categoryData?.description || "",
+    });
+  }, [categoryData]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
@@ -46,7 +60,7 @@ const CategoryModal = ({ isOpen, onClose }) => {
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="text-2xl text-gray-400 hover:text-gray-600 px-2 flex items-center justify-center cursor-pointer"
           >
             &times;
@@ -87,12 +101,13 @@ const CategoryModal = ({ isOpen, onClose }) => {
               onChange={handleChange}
             />
           </div>
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
             >
               Cancel
@@ -102,7 +117,7 @@ const CategoryModal = ({ isOpen, onClose }) => {
               type="submit"
               className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-medium text-black hover:bg-yellow-500 cursor-pointer"
             >
-              {isLoading ? "Creating" : " Create Category"}
+              {isLoading ? "Updating" : " update Category"}
             </button>
           </div>
         </form>
@@ -111,4 +126,4 @@ const CategoryModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default CategoryModal;
+export default UpdateCategoryModal;

@@ -3,10 +3,10 @@
 import React, { cloneElement, useEffect, useState } from "react";
 import Link from "next/link";
 import CreateFreeVideos from "./CreateFreeVideos";
-import { IoReorderThreeOutline } from "react-icons/io5";
+import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { MdManageHistory, MdOutlineVideoStable } from "react-icons/md";
-import { CiCirclePlus } from "react-icons/ci";
+import { CiCirclePlus, CiVideoOn } from "react-icons/ci";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -18,15 +18,16 @@ import EditCourse from "./EditCourse";
 import AllCourse from "./AllCourse";
 import CreateCourse from "./CreateCourse";
 import CategoryList from "./CategoryList";
+import { LiaBookSolid } from "react-icons/lia";
 
 const CoursesIcon = () => (
   <span className="text-2xl">
-    <FaBook />
+    <LiaBookSolid />
   </span>
 );
 const FreeVideosIcon = () => (
   <span className="text-2xl">
-    <TbFreezeColumn />
+    <CiVideoOn />
   </span>
 );
 const CreateIcon = () => (
@@ -37,7 +38,7 @@ const CreateIcon = () => (
 
 const SettingsIcon = () => (
   <span className="text-2xl">
-    <MdManageHistory />
+    <IoCreateOutline />
   </span>
 );
 
