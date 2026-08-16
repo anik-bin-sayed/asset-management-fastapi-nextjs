@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
-from fastapi import Query
+from datetime import datetime
+
+from fastapi import Depends, File, Form, UploadFile, Query, APIRouter, Depends
 
 from sqlalchemy.orm import Session
 
@@ -26,15 +27,40 @@ router = APIRouter(
     "",
     response_model=CourseResponse,
 )
-def create_course(
-    data: CourseCreate,
+async def create_course(
+    title: str = Form(...),
+    short_description: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    discount_price: float | None = Form(None),
+    level: str = Form(...),
+    language: str = Form(...),
+    course_type: str = Form(...),
+    category_id: int = Form(...),
+    start_date: datetime | None = Form(None),
+    end_date: datetime | None = Form(None),
+    thumbnail: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_instructor_required),
 ):
+    data = CourseCreate(
+        title=title,
+        short_description=short_description,
+        description=description,
+        price=price,
+        discount_price=discount_price,
+        level=level,
+        language=language,
+        course_type=course_type,
+        category_id=category_id,
+        start_date=start_date,
+        end_date=end_date,
+    )
 
-    return CourseService.create(
+    return await CourseService.create(
         db,
         data,
+        thumbnail,
         current_user,
     )
 

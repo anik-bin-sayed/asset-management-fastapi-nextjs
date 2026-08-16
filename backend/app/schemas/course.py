@@ -24,6 +24,9 @@ class CourseCreate(BaseModel):
     course_type: CourseType = CourseType.FREE
     language: CourseLanguage = CourseLanguage.BANGLA
 
+    start_date: datetime
+    end_date: datetime
+
     category_id: int
 
 

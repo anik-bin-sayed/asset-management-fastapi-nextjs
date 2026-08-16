@@ -33,17 +33,14 @@ class FreeCourseService:
         current_user: User = Depends(admin_instructor_required),
     ):
 
-        # Slug Generate
         slug = slugify(data.title)
 
-        # Duplicate Slug Check
         if FreeCourseRepository.get_by_slug(db, slug):
             raise HTTPException(
                 status_code=400,
                 detail="Course already exists.",
             )
 
-        # Upload Image
         image = await upload_image(
             thumbnail,
             folder="free_courses",
