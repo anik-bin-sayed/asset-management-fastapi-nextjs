@@ -74,10 +74,18 @@ class CategoryService:
             category_id,
         )
 
+        print(category)
+
         if not category:
             raise HTTPException(
                 status_code=404,
                 detail="Category not found",
+            )
+
+        if category.courses:
+            raise HTTPException(
+                status_code=409,
+                detail="Cannot delete category because it has associated courses.",
             )
 
         CategoryRepository.delete(
