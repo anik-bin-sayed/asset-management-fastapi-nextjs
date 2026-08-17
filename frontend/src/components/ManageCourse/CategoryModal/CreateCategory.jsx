@@ -1,5 +1,5 @@
-import { useCreateCategoryMutation } from "@/lib/features/category/category-api";
 import { useState } from "react";
+import { useCreateCategoryMutation } from "../../../lib/features/category/category-api";
 
 const CreateCategoryModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({

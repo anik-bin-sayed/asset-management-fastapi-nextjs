@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import { useLogoutUserMutation } from "../lib/features/auth/authApi";
 import Image from "next/image";
 
 import Link from "next/link";

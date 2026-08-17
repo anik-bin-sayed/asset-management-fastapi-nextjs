@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useGetAllCategoryQuery } from "@/lib/features/category/category-api";
 import CreateCategoryModal from "../CategoryModal/CreateCategory";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { LuGalleryThumbnails } from "react-icons/lu";
 import Image from "next/image";
-import { useCreateCourseMutation } from "@/lib/features/courses/paid-course-api";
+
+import { useCreateCourseMutation } from "../../../lib/features/courses/paid-course-api";
+import { useGetAllCategoryQuery } from "../../../lib/features/category/category-api";
 
 const initialState = {
   title: "",

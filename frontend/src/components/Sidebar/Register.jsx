@@ -1,11 +1,11 @@
 "use client";
 
-import { useRegisterMutation } from "@/lib/features/auth/authApi";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
+import { useRegisterMutation } from "../../lib/features/auth/authApi";
 
 const initialFormData = {
   email: "",

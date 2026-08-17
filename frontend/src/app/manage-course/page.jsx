@@ -1,10 +1,9 @@
 "use client";
+import { Suspense } from "react";
 
-import ManageCourse from "@/components/ManageCourse";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
-import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
-import Loader from "@/utils/Loader";
-import React, { Suspense } from "react";
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+import Loader from "../../utils/Loader";
+import ManageCourse from "../../components/ManageCourse";
 
 const Page = () => {
   const { data, isLoading } = useGetProfileQuery();

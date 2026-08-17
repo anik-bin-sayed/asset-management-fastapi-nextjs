@@ -3,14 +3,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import SideLogin from "./Sidebar/SideLogin";
 import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
-import NavbarUserDetails from "@/utils/NavbarUserDetails";
-import MobileNavUserDetails from "@/utils/MovileNavUserDetails";
+import { useGetProfileQuery } from "../lib/features/auth/authApi";
+import NavbarUserDetails from "../utils/NavbarUserDetails";
+import MobileNavUserDetails from "../utils/MovileNavUserDetails";
 import ManageCoursesLinks from "./Courses/ManageCoursesLinks";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/lib/features/auth/authSlice";
+import { setUser } from "../lib/features/auth/authSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

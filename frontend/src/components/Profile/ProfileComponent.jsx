@@ -3,9 +3,9 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 
-import Loader from "@/utils/Loader";
+import Loader from "../../utils/Loader";
 import ProfileNavbar from "./ProfileNavbar";
 
 import {
@@ -28,7 +28,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import MobileSectionTopBar from "./MobileSectionTopBar";
-import { useUploadAvatarMutation } from "@/lib/features/profile/profileApi";
+import { useUploadAvatarMutation } from "../../lib/features/profile/profileApi";
 import Link from "next/link";
 import CountryFlag from "./ui/CountryFlag";
 

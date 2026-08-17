@@ -1,8 +1,9 @@
 "use client";
 
-import { useCreateFreeVideoMutation } from "@/lib/features/courses/free-course-api";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+
+import { useCreateFreeVideoMutation } from "../../lib/features/courses/free-course-api";
 
 const initialState = {
   title: "",

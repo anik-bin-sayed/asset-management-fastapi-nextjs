@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import Loader from "@/utils/Loader";
-import FreeCoursesContent from "@/components/FreeCourses/FreeCoursesContent";
+import Loader from "../../utils/Loader";
+import FreeCoursesContent from "../../components/FreeCourses/FreeCoursesContent";
 
 const Page = async ({ searchParams }) => {
   const params = await searchParams;

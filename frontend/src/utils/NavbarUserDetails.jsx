@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import { useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import { useLogoutUserMutation } from "../lib/features/auth/authApi";
 import Link from "next/link";
 import Image from "next/image";
 

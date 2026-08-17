@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetSomeFreeCourseQuery } from "@/lib/features/courses/free-course-api";
-import Home from "@/pages/Home";
-import Loader from "@/utils/Loader";
+import { useGetSomeFreeCourseQuery } from "../lib/features/courses/free-course-api";
+import Home from "../pages/Home";
+import Loader from "../utils/Loader";
 import React from "react";
 
 const Page = () => {

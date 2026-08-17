@@ -1,9 +1,9 @@
 "use client";
 
-import Loader from "@/utils/Loader";
+import Loader from "../../utils/Loader";
 import { useRouter } from "next/navigation";
 import FreeCourses from "./index";
-import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
+import { useGetAllFreeCoursesQuery } from "../../lib/features/courses/free-course-api";
 
 const FreeCoursesContent = ({ currentPage }) => {
   const router = useRouter();

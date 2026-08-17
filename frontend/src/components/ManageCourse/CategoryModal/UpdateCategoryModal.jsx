@@ -1,5 +1,5 @@
-import { useUpdateCategoryMutation } from "@/lib/features/category/category-api";
 import React, { useEffect, useState } from "react";
+import { useUpdateCategoryMutation } from "../../../lib/features/category/category-api";
 
 const initialState = {
   name: "",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserProfileQuery } from "@/lib/features/profile/profileApi";
+import { useUserProfileQuery } from "../../lib/features/profile/profileApi";
 import React, { useState } from "react";
 import ProfileNavbar from "../Profile/ProfileNavbar";
 import MobileSectionTopBar from "../Profile/MobileSectionTopBar";
@@ -27,8 +27,8 @@ import {
   FaTimes,
   FaTimesCircle,
 } from "react-icons/fa";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
-import Loader from "@/utils/Loader";
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+import Loader from "../../utils/Loader";
 
 const UserProfile = ({ userId }) => {
   const [copied, setCopied] = useState(false);

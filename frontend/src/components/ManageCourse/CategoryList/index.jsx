@@ -1,11 +1,11 @@
-import {
-  useDeleteCategoryMutation,
-  useGetAllCategoryQuery,
-} from "@/lib/features/category/category-api";
 import React, { useState } from "react";
 import UpdateCategoryModal from "../CategoryModal/UpdateCategoryModal";
 import { toast } from "sonner";
 import { CiStickyNote } from "react-icons/ci";
+import {
+  useDeleteCategoryMutation,
+  useGetAllCategoryQuery,
+} from "../../../lib/features/category/category-api";
 
 const CategoryList = () => {
   const [deleteCatId, setDeleteCatId] = useState(null);

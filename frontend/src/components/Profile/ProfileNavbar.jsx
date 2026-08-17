@@ -1,6 +1,9 @@
 "use client";
 
-import { authApi, useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import {
+  authApi,
+  useLogoutUserMutation,
+} from "../../lib/features/auth/authApi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

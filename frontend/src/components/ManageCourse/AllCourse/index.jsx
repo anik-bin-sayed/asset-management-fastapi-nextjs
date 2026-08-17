@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   useDeleteCourseMutation,
   useGetAllCourseQuery,
-} from "@/lib/features/courses/paid-course-api";
+} from "../../../lib/features/courses/paid-course-api";
 import {
   LuBookOpen,
   LuEye,

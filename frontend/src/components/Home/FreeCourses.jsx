@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Loader from "@/utils/Loader";
+import Loader from "../../utils/Loader";
 import VideoModal from "./VideoModal";
 import { useSelector } from "react-redux";
 import Link from "next/link";

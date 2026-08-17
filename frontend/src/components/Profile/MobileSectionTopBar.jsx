@@ -1,7 +1,10 @@
 import React from "react";
 import { IoIosLogOut, IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { authApi, useLogoutUserMutation } from "@/lib/features/auth/authApi";
+import {
+  authApi,
+  useLogoutUserMutation,
+} from "../../lib/features/auth/authApi";
 import { useDispatch } from "react-redux";
 
 const MobileSectionTopBar = () => {

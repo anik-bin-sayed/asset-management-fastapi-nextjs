@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProfileNavbar from "./ProfileNavbar";
@@ -11,8 +11,8 @@ import {
   FaLinkedin,
 } from "react-icons/fa6";
 import GenderSelect from "./ui/GenderSelect";
-import Loader from "@/utils/Loader";
-import { useUpdateProfileInfoMutation } from "@/lib/features/profile/profileApi";
+import Loader from "../../utils/Loader";
+import { useUpdateProfileInfoMutation } from "../../lib/features/profile/profileApi";
 import CountrySelect from "./ui/CountrySelect ";
 
 // demo

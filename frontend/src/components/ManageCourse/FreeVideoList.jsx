@@ -1,12 +1,12 @@
 import {
   useDeleteFreeCourseMutation,
   useGetAllFreeCoursesQuery,
-} from "@/lib/features/courses/free-course-api";
+} from "../../lib/features/courses/free-course-api";
 import React, { useState } from "react";
 import VideoModal from "../Home/VideoModal";
 import Link from "next/link";
 import Image from "next/image";
-import SkeletonLoader from "@/utils/SkeletonLoader";
+import SkeletonLoader from "../../utils/SkeletonLoader";
 import { useRouter } from "next/navigation";
 
 const FreeVideoList = () => {

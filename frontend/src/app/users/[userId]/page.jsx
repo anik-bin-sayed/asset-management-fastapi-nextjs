@@ -1,6 +1,6 @@
 "use client";
 
-import UserProfile from "@/components/UserProfile/UserProfile";
+import UserProfile from "../../../components/UserProfile/UserProfile";
 import { useParams } from "next/navigation";
 import React from "react";
 

@@ -1,16 +1,14 @@
 "use client";
 
-import AllUser from "@/components/AllUser/AllUser";
-import { useAllUsersQuery } from "@/lib/features/profile/profileApi";
-import Loader from "@/utils/Loader";
+import AllUser from "../../components/AllUser/AllUser";
+import { useAllUsersQuery } from "../../lib/features/profile/profileApi";
+import Loader from "../../utils/Loader";
 import { useState } from "react";
 
 const Page = () => {
-  // Local state for search and pagination
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  // Fetch users with the current page and search term
   const { data, isLoading, isError } = useAllUsersQuery({
     page,
     limit: 30,
@@ -19,21 +17,17 @@ const Page = () => {
 
   console.log(search);
 
-  // Mutation for changing user role
   // const [updateRole, { isLoading: isUpdating }] = useUpdateUserRoleMutation();
 
-  // Callback for search – resets to page 1
   const handleSearch = (term) => {
     setSearch(term);
     setPage(1);
   };
 
-  // Callback for page change
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
 
-  // Callback for role change
   const handleRoleChange = async (userId, newRole) => {
     try {
       // await updateRole({ userId, role: newRole }).unwrap();

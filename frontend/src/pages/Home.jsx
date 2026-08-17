@@ -1,6 +1,5 @@
-import FreeCourses from "@/components/Home/FreeCourses";
-import Hero from "@/components/Home/Hero";
-import UpcommingCourse from "@/components/Home/UpcommingCourse";
+import FreeCourses from "../components/Home/FreeCourses";
+import Hero from "../components/Home/Hero";
 import React from "react";
 
 const Home = ({ freeCourseData, freeCourseLoading }) => {
@@ -8,7 +7,7 @@ const Home = ({ freeCourseData, freeCourseLoading }) => {
     <>
       <Hero />
       <FreeCourses data={freeCourseData} loading={freeCourseLoading} />
-      <UpcommingCourse />
+      {/* <UpcommingCourse /> */}
     </>
   );
 };

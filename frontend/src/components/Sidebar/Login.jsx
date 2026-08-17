@@ -5,12 +5,12 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
 
+import { AnimatePresence, motion } from "framer-motion";
 import {
   useCheckEmailMutation,
   useGetProfileQuery,
   useLoginMutation,
-} from "@/lib/features/auth/authApi";
-import { AnimatePresence, motion } from "framer-motion";
+} from "../../lib/features/auth/authApi";
 
 const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
   const [step, setStep] = useState(1);
