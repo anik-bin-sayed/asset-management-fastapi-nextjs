@@ -119,19 +119,12 @@ def refresh(
             detail="Refresh token missing",
         )
 
-    access_token = UserService.refresh(
+    access_token, new_refresh_token = UserService.refresh(
         db,
         refresh_token,
     )
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=False,
-        samesite="lax",
-        max_age=60 * 15,
-    )
+    set_auth_cookies(response, access_token, new_refresh_token)
 
     return {
         "message": "Access token refreshed",

@@ -113,14 +113,11 @@ class UserService:
         if not payload:
             raise HTTPException(
                 status_code=401,
-                detail="Invalid refresh token",
+                detail="Invalid or expired refresh token",
             )
 
         if payload["type"] != "refresh":
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid token type",
-            )
+            raise HTTPException(status_code=401, detail="Invalid token type")
 
         user = UserRepository.get_by_refresh_token(
             db,
@@ -137,4 +134,8 @@ class UserService:
             {"sub": str(user.id), "type": "access", "role": user.role}
         )
 
-        return access_token
+        new_refresh_token = create_refresh_token({"sub": str(user.id)})
+
+        UserRepository.update_refresh_token(db, user, new_refresh_token)
+
+        return access_token, new_refresh_token

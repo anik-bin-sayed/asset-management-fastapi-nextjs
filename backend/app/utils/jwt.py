@@ -46,8 +46,5 @@ def decode_token(token: str):
         )
         return payload
 
-    except ExpiredSignatureError:
-        raise ValueError("Token has expired")
-
-    except JWTError:
-        raise ValueError("Invalid token")
+    except (ExpiredSignatureError, JWTError):
+        return None
