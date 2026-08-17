@@ -23,7 +23,19 @@ export const paidCourseApi = createApi({
       }),
       providesTags: ["Course"],
     }),
+
+    deleteCourse: builder.mutation({
+      query: (id) => ({
+        url: `/courses/${id}/delete`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
-export const { useCreateCourseMutation, useGetAllCourseQuery } = paidCourseApi;
+export const {
+  useCreateCourseMutation,
+  useGetAllCourseQuery,
+  useDeleteCourseMutation,
+} = paidCourseApi;

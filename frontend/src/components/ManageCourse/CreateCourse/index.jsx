@@ -19,6 +19,7 @@ const initialState = {
   level: "beginner",
   language: "bangla",
   course_type: "paid",
+  status: "published",
   category_id: "",
   start_date: "",
   end_date: "",
@@ -273,6 +274,23 @@ const CreateCourse = () => {
                   </select>
                 </div>
 
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Course Status
+                  </label>
+
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                  >
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+
                 {/* Language */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -495,9 +513,21 @@ const CreateCourse = () => {
             <div className="flex items-center justify-end gap-3 pb-8">
               <button
                 type="submit"
-                className="rounded-xl w-full bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition hover:bg-yellow-500 cursor-pointer"
+                disabled={creating}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-yellow-200 disabled:opacity-70"
               >
-                Create Course
+                {creating ? (
+                  <>
+                    <span
+                      className="h-5 w-5 animate-spin rounded-full border-2 border-black/30 border-t-black"
+                      aria-hidden="true"
+                    />
+
+                    <span>Creating...</span>
+                  </>
+                ) : (
+                  "Create Course"
+                )}
               </button>
             </div>
           </form>

@@ -2,20 +2,24 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
-import { useGetAllCourseQuery } from "@/lib/features/courses/paid-course-api";
+import {
+  useDeleteCourseMutation,
+  useGetAllCourseQuery,
+} from "@/lib/features/courses/paid-course-api";
 import {
   LuBookOpen,
   LuEye,
   LuPencil,
   LuPlus,
   LuSearch,
-  LuSlidersHorizontal,
   LuTrash2,
   LuX,
 } from "react-icons/lu";
 import AllCourseLoader from "./AllCourseLoader";
 import AllCourseError from "./AllCourseError";
 import Filter from "./Filter";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 
 const AllCourse = () => {
   const [search, setSearch] = useState("");
@@ -24,17 +28,20 @@ const AllCourse = () => {
   const [level, setLevel] = useState("all");
   const [language, setLanguage] = useState("all");
 
+  const [deletingCourseId, setDeletingCourseId] = useState(null);
+
+  // redux
   const { data, isLoading, isFetching, isError, error } = useGetAllCourseQuery({
     page: 1,
     limit: 10,
   });
+  const [deleteCourse] = useDeleteCourseMutation();
+
+  const router = useRouter();
 
   const courses = data?.data ?? [];
 
-  // =========================
   // STATS
-  // =========================
-
   const totalCourses = courses.length;
 
   const publishedCourses = courses.filter(
@@ -84,10 +91,7 @@ const AllCourse = () => {
     });
   }, [courses, search, status, courseType, level, language]);
 
-  // =========================
   // RESET FILTER
-  // =========================
-
   const resetFilters = () => {
     setSearch("");
     setStatus("all");
@@ -107,6 +111,29 @@ const AllCourse = () => {
 
   if (isError) return <AllCourseError />;
 
+  const handleDeleteCourse = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this course? This action cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    setDeletingCourseId(id);
+
+    try {
+      const res = await deleteCourse(id).unwrap();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDeletingCourseId(null);
+    }
+  };
+
+  const handleCreateRoute = () => {
+    router.push("/manage-course?tab=create-course");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="mx-auto max-w-7xl">
@@ -122,6 +149,7 @@ const AllCourse = () => {
           <button
             type="button"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-400 px-5 py-3 text-sm font-semibold text-black cursor-pointer transition hover:bg-yellow-500"
+            onClick={handleCreateRoute}
           >
             <LuPlus className="text-lg" />
             Create Course
@@ -237,7 +265,7 @@ const AllCourse = () => {
               return (
                 <div
                   key={course.id}
-                  className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                 >
                   {/* Thumbnail */}
                   <div className="relative h-48 overflow-hidden bg-gray-100">
@@ -246,7 +274,7 @@ const AllCourse = () => {
                         src={course.thumbnail}
                         alt={course.title}
                         fill
-                        className="object-cover transition duration-300 group-hover:scale-105"
+                        className="object-cover transition duration-300 "
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">
@@ -280,7 +308,7 @@ const AllCourse = () => {
                   {/* Content */}
                   <div className="p-5">
                     {/* Language / Level */}
-                    <div className="mb-2 flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-xs font-medium text-gray-500">
                         {languageLabel}
                       </span>
@@ -293,7 +321,7 @@ const AllCourse = () => {
                     </div>
 
                     {/* Title */}
-                    <h2 className="line-clamp-2 min-h-12 text-base font-semibold leading-6 text-gray-900">
+                    <h2 className="line-clamp-2 text-base font-semibold leading-6 text-gray-900">
                       {course.title}
                     </h2>
 
@@ -302,49 +330,44 @@ const AllCourse = () => {
                       {course.short_description || "No description available."}
                     </p>
 
-                    {/* Date */}
-                    <div className="mt-4 text-xs text-gray-400">
-                      {course.start_date ? (
-                        <>
-                          Start:{" "}
-                          {new Date(course.start_date).toLocaleDateString()}
-                        </>
-                      ) : (
-                        "No start date"
-                      )}
-                    </div>
+                    {/* date & price */}
+                    <div className="flex items-center justify-between">
+                      <div className="mt-4 text-xs text-gray-400">
+                        {course.start_date ? (
+                          <>
+                            Start:{" "}
+                            {new Date(course.start_date).toLocaleDateString()}
+                          </>
+                        ) : (
+                          "No start date"
+                        )}
+                      </div>
 
-                    {/* Price */}
-                    <div className="mt-5 flex items-center gap-2">
-                      {course.course_type === "free" ? (
-                        <span className="text-lg font-bold text-green-600">
-                          Free
-                        </span>
-                      ) : (
-                        <>
-                          <span className="text-lg font-bold text-gray-900">
-                            ৳{discountPrice > 0 ? discountPrice : price}
+                      <div className="mt-5 flex items-center gap-2">
+                        {course.course_type === "free" ? (
+                          <span className="text-lg font-bold text-green-600">
+                            Free
                           </span>
-
-                          {discountPrice > 0 && discountPrice < price && (
-                            <span className="text-sm text-gray-400 line-through">
-                              ৳{price}
+                        ) : (
+                          <>
+                            <span className="text-lg font-bold text-gray-900 flex items-center">
+                              <TbCurrencyTaka />
+                              {discountPrice > 0 ? discountPrice : price}
                             </span>
-                          )}
-                        </>
-                      )}
+
+                            {discountPrice > 0 && discountPrice < price && (
+                              <span className="text-sm line-through flex items-center text-red-500">
+                                <TbCurrencyTaka />
+                                {price}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
 
                     {/* Actions */}
                     <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4">
-                      <button
-                        type="button"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        <LuEye />
-                        View
-                      </button>
-
                       <button
                         type="button"
                         className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
@@ -355,9 +378,24 @@ const AllCourse = () => {
 
                       <button
                         type="button"
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-100 text-red-500 transition hover:bg-red-50"
+                        disabled={deletingCourseId === course.id}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-500 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        onClick={() => handleDeleteCourse(course.id)}
                       >
-                        <LuTrash2 />
+                        {deletingCourseId === course.id ? (
+                          <>
+                            <span
+                              className="h-4 w-4 animate-spin rounded-full border-2 border-red-500/30 border-t-red-500"
+                              aria-hidden="true"
+                            />
+                            Deleting...
+                          </>
+                        ) : (
+                          <>
+                            <LuTrash2 />
+                            Delete
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
