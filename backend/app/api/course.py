@@ -36,6 +36,7 @@ async def create_course(
     level: str = Form(...),
     language: str = Form(...),
     course_type: str = Form(...),
+    status: str = Form(...),
     category_id: int = Form(...),
     start_date: datetime | None = Form(None),
     end_date: datetime | None = Form(None),
@@ -51,6 +52,7 @@ async def create_course(
         discount_price=discount_price,
         level=level,
         language=language,
+        status=status,
         course_type=course_type,
         category_id=category_id,
         start_date=start_date,
@@ -104,4 +106,15 @@ def get_course_modules(
         db=db,
         course_id=course_id,
         student_id=current_user.id,
+    )
+
+
+@router.delete("/{course_id}/delete")
+async def delete_paid_course(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await CourseService.delete_course(
+        db=db, course_id=course_id, current_user=current_user
     )

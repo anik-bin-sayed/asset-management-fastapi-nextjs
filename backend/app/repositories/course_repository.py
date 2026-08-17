@@ -15,9 +15,21 @@ class CourseRepository:
         return course
 
     @staticmethod
+    def delete(
+        db: Session,
+        course: Course,
+    ):
+        db.delete(course)
+        db.commit()
+
+    @staticmethod
     def get_by_slug(db: Session, slug: str):
 
         return db.query(Course).filter(Course.slug == slug).first()
+
+    @staticmethod
+    def get_by_id(db: Session, course_id: int):
+        return db.query(Course).filter(Course.id == course_id).first()
 
     @staticmethod
     def get_all(
@@ -55,7 +67,3 @@ class CourseRepository:
         )
 
         return courses, total
-
-    @staticmethod
-    def get_by_id(db: Session, course_id: int):
-        return db.query(Course).filter(Course.id == course_id).first()

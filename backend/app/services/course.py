@@ -1,4 +1,4 @@
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException, UploadFile, Depends
 
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.utils.slug import generate_slug
 
 from app.schemas.course import CourseCreate
 from app.utils.cloudinary import upload_image, delete_image
+from app.core.dependencies import admin_instructor_required
 
 
 class CourseService:
@@ -70,13 +71,13 @@ class CourseService:
             level=data.level,
             language=data.language,
             course_type=data.course_type,
+            status=data.status,
             category_id=data.category_id,
             instructor_id=current_user.id,
             start_date=data.start_date,
             end_date=data.end_date,
             thumbnail=image["secure_url"] if image else None,
             thumbnail_public_id=image["public_id"] if image else None,
-            status=CourseStatus.DRAFT,
         )
 
         return CourseRepository.create(
@@ -116,3 +117,27 @@ class CourseService:
             "limit": limit,
             "total_pages": (total + limit - 1) // limit,
         }
+
+    @staticmethod
+    async def delete_course(
+        db: Session,
+        course_id: int,
+        current_user: User = Depends(admin_instructor_required),
+    ):
+        course = CourseRepository.get_by_id(db, course_id)
+
+        if not course:
+            raise HTTPException(
+                status_code=404,
+                detail="Course not found.",
+            )
+
+        if course.thumbnail_public_id:
+            delete_image(course.thumbnail_public_id)
+
+        CourseRepository.delete(
+            db,
+            course,
+        )
+
+        return {"message": "Course deleted successfully."}

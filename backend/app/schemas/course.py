@@ -22,10 +22,11 @@ class CourseCreate(BaseModel):
 
     level: CourseLevel = CourseLevel.BEGINNER
     course_type: CourseType = CourseType.FREE
+    status: CourseStatus = CourseStatus.PUBLISHED
     language: CourseLanguage = CourseLanguage.BANGLA
 
-    start_date: datetime
-    end_date: datetime
+    start_date: datetime | None = None
+    end_date: datetime | None = None
 
     category_id: int
 
