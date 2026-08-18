@@ -1,9 +1,12 @@
 "use client";
 
-import Loader from "../../../utils/Loader";
 import { useSearchParams } from "next/navigation";
+
 import React, { Suspense } from "react";
+
+import Loader from "../../../utils/Loader";
 import EditCourseForm from "./EditCourseForm";
+
 import { useGetCourseBySlugQuery } from "../../../lib/features/courses/free-course-api";
 
 const EditCourse = () => {

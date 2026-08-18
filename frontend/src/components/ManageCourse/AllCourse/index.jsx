@@ -134,6 +134,11 @@ const AllCourse = () => {
     router.push("/manage-course?tab=create-course");
   };
 
+  const handleEdit = (course) => {
+    router.push(
+      `/manage-course?tab=edit-paid-course&slug=${encodeURIComponent(course.slug)}`,
+    );
+  };
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="mx-auto max-w-7xl">
@@ -370,7 +375,8 @@ const AllCourse = () => {
                     <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4">
                       <button
                         type="button"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-400 py-2.5 text-sm font-medium text-black transition hover:bg-yellow-500"
+                        onClick={() => handleEdit(course)}
                       >
                         <LuPencil />
                         Edit

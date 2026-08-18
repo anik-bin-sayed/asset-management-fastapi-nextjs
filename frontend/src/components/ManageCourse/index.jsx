@@ -1,24 +1,29 @@
 "use client";
 
-import React, { cloneElement, useEffect, useState } from "react";
 import Link from "next/link";
-import CreateFreeVideos from "./CreateFreeVideos";
-import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
-import { MdManageHistory, MdOutlineVideoStable } from "react-icons/md";
-import { CiCirclePlus, CiVideoOn } from "react-icons/ci";
-import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import React, { cloneElement, useEffect, useState } from "react";
+
 import { useSelector } from "react-redux";
-import FreeVideoList from "./FreeVideoList";
-import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
-import { TbCategory, TbFreezeColumn } from "react-icons/tb";
-import { FaBook } from "react-icons/fa6";
+
+import CreateFreeVideos from "./CreateFreeVideos";
+import EditPaidCourse from "./EditPaidCourse";
 import EditCourse from "./EditCourse";
 import AllCourse from "./AllCourse";
 import CreateCourse from "./CreateCourse";
 import CategoryList from "./CategoryList";
+import FreeVideoList from "./FreeVideoList";
+
+import { FaBook } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 import { LiaBookSolid } from "react-icons/lia";
+import { CiCirclePlus, CiVideoOn } from "react-icons/ci";
+import { TbCategory, TbFreezeColumn } from "react-icons/tb";
+import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
+import { MdManageHistory, MdOutlineVideoStable } from "react-icons/md";
+import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
 
 const CoursesIcon = () => (
   <span className="text-2xl">
@@ -71,6 +76,9 @@ const ManageCourse = ({ profileData }) => {
 
       case "edit-course":
         return <EditCourse />;
+
+      case "edit-paid-course":
+        return <EditPaidCourse />;
 
       case "category-list":
         return <CategoryList />;

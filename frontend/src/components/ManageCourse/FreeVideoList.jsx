@@ -30,7 +30,6 @@ const FreeVideoList = () => {
   }
 
   const handleEdit = (course) => {
-    console.log(course?.slug);
     router.push(
       `/manage-course?tab=edit-course&slug=${encodeURIComponent(course.slug)}`,
     );

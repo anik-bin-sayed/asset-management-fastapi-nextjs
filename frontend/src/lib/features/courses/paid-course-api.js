@@ -31,6 +31,14 @@ export const paidCourseApi = createApi({
       }),
       invalidatesTags: ["Course"],
     }),
+
+    getCourseBySlug: builder.query({
+      query: (slug) => ({
+        url: `/courses/${slug}`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
   }),
 });
 
@@ -38,4 +46,5 @@ export const {
   useCreateCourseMutation,
   useGetAllCourseQuery,
   useDeleteCourseMutation,
+  useGetCourseBySlugQuery,
 } = paidCourseApi;
