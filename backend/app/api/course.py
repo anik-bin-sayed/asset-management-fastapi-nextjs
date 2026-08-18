@@ -1,6 +1,15 @@
 from datetime import datetime
 
-from fastapi import Depends, File, Form, UploadFile, Query, APIRouter, Depends
+from fastapi import (
+    Depends,
+    File,
+    Form,
+    UploadFile,
+    Query,
+    APIRouter,
+    Depends,
+    HTTPException,
+)
 
 from sqlalchemy.orm import Session
 
@@ -118,3 +127,20 @@ async def delete_paid_course(
     return await CourseService.delete_course(
         db=db, course_id=course_id, current_user=current_user
     )
+
+
+@router.get("/{slug}/")
+async def update_paid_course(
+    slug: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    course = await CourseService.get_by_slug(db, slug)
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Free course not found",
+        )
+
+    return course

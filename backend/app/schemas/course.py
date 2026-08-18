@@ -28,7 +28,7 @@ class CourseCreate(BaseModel):
     start_date: datetime | None = None
     end_date: datetime | None = None
 
-    category_id: int
+    category_id: int | None = None
 
 
 class CourseResponse(BaseModel):

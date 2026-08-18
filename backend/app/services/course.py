@@ -22,6 +22,12 @@ class CourseService:
         thumbnail: UploadFile,
         current_user: User,
     ):
+        if not data.category_id:
+            raise HTTPException(
+                status_code=404,
+                detail="Category not define.",
+            )
+
         # Check category
         category = CategoryRepository.get_by_id(
             db,
@@ -141,3 +147,14 @@ class CourseService:
         )
 
         return {"message": "Course deleted successfully."}
+
+    @staticmethod
+    async def get_by_slug(db: Session, slug: str):
+        course = CourseRepository.get_by_slug(db, slug)
+        if not course:
+            raise HTTPException(
+                status_code=404,
+                detail="Course not found.",
+            )
+
+        return course
