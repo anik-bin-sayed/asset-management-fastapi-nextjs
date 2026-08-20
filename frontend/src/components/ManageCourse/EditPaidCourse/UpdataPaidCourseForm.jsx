@@ -9,6 +9,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import CreateCategoryModal from "../CategoryModal/CreateCategory";
 import { useGetAllCategoryQuery } from "../../../lib/features/category/category-api";
 import { useRouter } from "next/navigation";
+import { useUpdateCourseMutation } from "../../../lib/features/courses/paid-course-api";
 
 const initialState = {
   title: "",
@@ -35,6 +36,7 @@ const UpdataPaidCourseForm = ({ courseData }) => {
 
   // redux
   const { data: categories, isLoading } = useGetAllCategoryQuery();
+  const [updateCourse, { isLoading: Updating }] = useUpdateCourseMutation();
 
   const router = useRouter();
 

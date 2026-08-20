@@ -39,6 +39,15 @@ export const paidCourseApi = createApi({
       }),
       providesTags: ["Course"],
     }),
+
+    updateCourse: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/courses/${id}/update`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
@@ -47,4 +56,6 @@ export const {
   useGetAllCourseQuery,
   useDeleteCourseMutation,
   useGetCourseBySlugQuery,
+
+  useUpdateCourseMutation,
 } = paidCourseApi;
