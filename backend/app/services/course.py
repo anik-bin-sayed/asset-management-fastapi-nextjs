@@ -8,7 +8,7 @@ from app.repositories.category_repository import CategoryRepository
 from app.repositories.course_repository import CourseRepository
 from app.utils.slug import generate_slug
 
-from app.schemas.course import CourseCreate
+from app.schemas.course import CourseCreate, UpdateCourse
 from app.utils.cloudinary import upload_image, delete_image
 from app.core.dependencies import admin_instructor_required
 
@@ -158,3 +158,72 @@ class CourseService:
             )
 
         return course
+
+    @staticmethod
+    async def update(
+        db: Session,
+        course_id: int,
+        data: UpdateCourse,
+        thumbnail: UploadFile | None,
+        current_user: User,
+    ):
+        course = CourseRepository.get_by_id(db, course_id)
+
+        if not course:
+            raise HTTPException(status_code=404, detail="Course not found")
+
+        if course.instructor_id != current_user.id:
+            raise HTTPException(
+                status_code=403,
+                detail="You are not allowed to update this course.",
+            )
+
+        if not data.category_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Category not defined.",
+            )
+
+        category = CategoryRepository.get_by_id(
+            db,
+            data.category_id,
+        )
+
+        if not category:
+            raise HTTPException(
+                status_code=404,
+                detail="Category not found.",
+            )
+
+        if data.discount_price is not None and data.discount_price > data.price:
+            raise HTTPException(
+                status_code=400,
+                detail="Discount price cannot be greater than price.",
+            )
+
+        if thumbnail:
+            image = await upload_image(
+                thumbnail,
+                folder="courses",
+            )
+
+            course.thumbnail = image["secure_url"]
+            course.thumbnail_public_id = image["public_id"]
+
+        course.title = data.title
+        course.short_description = data.short_description
+        course.description = data.description
+        course.price = data.price
+        course.discount_price = data.discount_price
+        course.level = data.level
+        course.language = data.language
+        course.course_type = data.course_type
+        course.status = data.status
+        course.category_id = data.category_id
+        course.start_date = data.start_date
+        course.end_date = data.end_date
+
+        return CourseRepository.update(
+            db,
+            course,
+        )

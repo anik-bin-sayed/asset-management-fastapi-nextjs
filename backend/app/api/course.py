@@ -13,18 +13,28 @@ from fastapi import (
 
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
+
 from app.dependencies.database import get_db
 
 from app.models.user import User
+from app.models.course import CourseStatus
 
-from app.schemas.course import CourseCreate, CourseResponse, CourseListResponse
-
+from app.schemas.course import (
+    CourseCreate,
+    CourseResponse,
+    CourseListResponse,
+    UpdateCourse,
+)
 from app.schemas.module import ModuleResponse
-from app.services.module import ModuleService
 
+from app.services.module import ModuleService
 from app.services.course import CourseService
-from app.core.dependencies import admin_instructor_required, student_required
+
+from app.core.dependencies import (
+    admin_instructor_required,
+    student_required,
+    get_current_user,
+)
 
 router = APIRouter(
     prefix="/courses",
@@ -130,7 +140,7 @@ async def delete_paid_course(
 
 
 @router.get("/{slug}/")
-async def update_paid_course(
+async def get_course_slug(
     slug: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -144,3 +154,46 @@ async def update_paid_course(
         )
 
     return course
+
+
+@router.put("/{course_id}/update")
+async def update_course(
+    course_id: int,
+    title: str = Form(...),
+    short_description: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    discount_price: float | None = Form(None),
+    level: str = Form(...),
+    language: str = Form(...),
+    course_type: str = Form(...),
+    status: str = Form(...),
+    category_id: int = Form(...),
+    start_date: datetime | None = Form(None),
+    end_date: datetime | None = Form(None),
+    thumbnail: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    data = UpdateCourse(
+        title=title,
+        short_description=short_description,
+        description=description,
+        price=price,
+        discount_price=discount_price,
+        level=level,
+        language=language,
+        status=status,
+        course_type=course_type,
+        category_id=category_id,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+    return await CourseService.update(
+        db=db,
+        course_id=course_id,
+        data=data,
+        thumbnail=thumbnail,
+        current_user=current_user,
+    )

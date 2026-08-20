@@ -63,3 +63,22 @@ class CourseListResponse(BaseModel):
     page: int
     limit: int
     total_pages: int
+
+
+class UpdateCourse(BaseModel):
+    title: str = Field(..., min_length=3, max_length=255)
+    short_description: str
+    description: str
+
+    price: Decimal
+    discount_price: Decimal | None = None
+
+    level: CourseLevel = CourseLevel.BEGINNER
+    course_type: CourseType = CourseType.FREE
+    status: CourseStatus = CourseStatus.PUBLISHED
+    language: CourseLanguage = CourseLanguage.BANGLA
+
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+
+    category_id: int | None = None

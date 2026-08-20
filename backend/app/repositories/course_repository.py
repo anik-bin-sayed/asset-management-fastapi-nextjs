@@ -67,3 +67,11 @@ class CourseRepository:
         )
 
         return courses, total
+
+    @staticmethod
+    def update(db: Session, course: Course):
+        db.add(course)
+        db.commit()
+        db.refresh(course)
+
+        return course
