@@ -5,6 +5,8 @@ import { freeCourseApi } from "./features/courses/free-course-api";
 import authReducer from "./features/auth/authSlice";
 import { categoryApi } from "./features/category/category-api";
 import { paidCourseApi } from "./features/courses/paid-course-api";
+import { lessonApi } from "./features/lesson/lessonApi";
+import { lessonVideoApi } from "./features/lesson/lessonVideoApi";
 
 export const makeStore = () => {
   return configureStore({
@@ -15,6 +17,8 @@ export const makeStore = () => {
       [freeCourseApi.reducerPath]: freeCourseApi.reducer,
       [categoryApi.reducerPath]: categoryApi.reducer,
       [paidCourseApi.reducerPath]: paidCourseApi.reducer,
+      [lessonApi.reducerPath]: lessonApi.reducer,
+      [lessonVideoApi.reducerPath]: lessonVideoApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -23,6 +27,8 @@ export const makeStore = () => {
         .concat(profileApi.middleware)
         .concat(freeCourseApi.middleware)
         .concat(categoryApi.middleware)
-        .concat(paidCourseApi.middleware),
+        .concat(paidCourseApi.middleware)
+        .concat(lessonApi.middleware)
+        .concat(lessonVideoApi.middleware),
   });
 };

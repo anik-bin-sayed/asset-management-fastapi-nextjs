@@ -60,76 +60,122 @@ const FreeVideoList = () => {
       </div>
 
       {/* Course Grid */}
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {freeCoursesData?.data?.map((course) => (
-          <div
-            key={course.id}
-            className="flex flex-col overflow-hidden rounded bg-white shadow-lg transition-transform duration-300  border border-yellow-100"
-          >
-            {/* Image */}
-            <div className="relative h-48 w-full">
-              <Image
-                src={course.thumbnail}
-                alt={course.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-            </div>
+      <div className="mx-auto max-w-7xl overflow-x-auto rounded-xl border border-yellow-100 bg-white shadow-sm">
+        <table className="w-full min-w-[950px]">
+          {/* Header */}
+          <thead>
+            <tr className="border-b border-gray-200 bg-gray-50">
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Course
+              </th>
 
-            {/* Content */}
-            <div className="flex grow flex-col p-5">
-              <h2 className="line-clamp-2 text-xl font-bold text-gray-900">
-                {course.title}
-              </h2>
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Duration
+              </th>
 
-              <p className="mt-2 line-clamp-2 grow text-sm text-gray-600">
-                {course.description || course.short_description}
-              </p>
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Language
+              </th>
 
-              {/* Meta */}
-              <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                <span className="flex items-center">
-                  <span className="mr-1">⏱</span>
-                  {course.duration}
-                </span>
+              <th className="px-5 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Actions
+              </th>
+            </tr>
+          </thead>
 
-                <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                  {course.language}
-                </span>
-              </div>
+          {/* Body */}
+          <tbody className="divide-y divide-gray-100">
+            {freeCoursesData?.data?.map((course) => (
+              <tr
+                key={course.id}
+                className="transition-colors duration-200 hover:bg-yellow-50/50"
+              >
+                {/* Course */}
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-4">
+                    {/* Thumbnail */}
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      {course.thumbnail ? (
+                        <Image
+                          src={course.thumbnail}
+                          alt={course.title}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-xs text-gray-400">
+                          No Image
+                        </div>
+                      )}
+                    </div>
 
-              <div className="mt-5 grid grid-cols-3 gap-2">
-                {/* Watch */}
-                <button
-                  type="button"
-                  onClick={() => setSelectedCourse(course)}
-                  className="flex items-center justify-center gap-1.5 rounded-lg bg-yellow-400 px-3 py-2.5 text-sm font-medium text-black transition-all duration-200 hover:bg-yellow-500 hover:shadow-md active:scale-95"
-                >
-                  Watch
-                </button>
+                    {/* Course Info */}
+                    <div className="max-w-md">
+                      <h2 className="line-clamp-1 font-semibold text-gray-900">
+                        {course.title}
+                      </h2>
 
-                {/* Edit */}
-                <button
-                  type="button"
-                  onClick={() => handleEdit(course)}
-                  className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700 transition-all duration-200 hover:bg-blue-100 hover:shadow-md active:scale-95"
-                >
-                  Edit
-                </button>
+                      <p className="mt-1 line-clamp-1 text-sm text-gray-500">
+                        {course.description ||
+                          course.short_description ||
+                          "No description available"}
+                      </p>
+                    </div>
+                  </div>
+                </td>
 
-                {/* Delete */}
-                <button
-                  type="button"
-                  onClick={() => handleDelete(course?.id)}
-                  className="flex items-center justify-center gap-1.5 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-100 hover:shadow-md active:scale-95"
-                >
-                  {deletingId == course?.id ? "Deleting" : "Delete"}
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+                {/* Duration */}
+                <td className="px-4 py-4">
+                  <span className="flex items-center gap-1 text-sm text-gray-600">
+                    <span>⏱</span>
+                    {course.duration || "N/A"}
+                  </span>
+                </td>
+
+                {/* Language */}
+                <td className="px-4 py-4">
+                  <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                    {course.language}
+                  </span>
+                </td>
+
+                {/* Actions */}
+                <td className="px-5 py-4">
+                  <div className="flex items-center justify-center gap-2">
+                    {/* Watch */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCourse(course)}
+                      className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-yellow-500 active:scale-95"
+                    >
+                      Watch
+                    </button>
+
+                    {/* Edit */}
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(course)}
+                      className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 active:scale-95"
+                    >
+                      Edit
+                    </button>
+
+                    {/* Delete */}
+                    <button
+                      type="button"
+                      disabled={deletingId === course.id}
+                      onClick={() => handleDelete(course.id)}
+                      className="min-w-21.25 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {deletingId === course.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {selectedCourse && (

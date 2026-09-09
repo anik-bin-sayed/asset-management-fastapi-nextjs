@@ -20,6 +20,8 @@ import AllCourseError from "./AllCourseError";
 import Filter from "./Filter";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { MdLibraryAdd } from "react-icons/md";
 
 const AllCourse = () => {
   const [search, setSearch] = useState("");
@@ -139,9 +141,23 @@ const AllCourse = () => {
       `/manage-course?tab=edit-paid-course&slug=${encodeURIComponent(course.slug)}`,
     );
   };
+
+  const handleCreateLessons = (course) => {
+    router.push(
+      `/manage-course?tab=create-lessons&course_id=${encodeURIComponent(course.id)}`,
+    );
+  };
+
+  const handleViewLessons = (course) => {
+    router.push(
+      `/manage-course?tab=list-lessons&course_id=${encodeURIComponent(course.id)}`,
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="mx-auto max-w-7xl">
+        {/* Page Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">All Courses</h1>
@@ -153,7 +169,7 @@ const AllCourse = () => {
 
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-400 px-5 py-3 text-sm font-semibold text-black cursor-pointer transition hover:bg-yellow-500"
+            className="inline-flex items-center justify-center gap-2 rounded bg-yellow-400 px-5 py-3 text-sm font-semibold text-black cursor-pointer transition hover:bg-yellow-500"
             onClick={handleCreateRoute}
           >
             <LuPlus className="text-lg" />
@@ -163,7 +179,7 @@ const AllCourse = () => {
 
         <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Total */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-gray-50 bg-white p-5 shadow-sm ">
             <p className="text-sm text-gray-500">Total Courses</p>
 
             <div className="mt-3 flex items-center justify-between">
@@ -247,167 +263,231 @@ const AllCourse = () => {
         )}
 
         {filteredCourses.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {filteredCourses.map((course) => {
-              const price = Number(course.price || 0);
-              const discountPrice = Number(course.discount_price || 0);
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+            <table className="w-full min-w-[1100px] border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200 bg-gray-50">
+                  <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Course
+                  </th>
 
-              const statusLabel =
-                course.status?.charAt(0).toUpperCase() +
-                course.status?.slice(1);
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Category
+                  </th>
 
-              const typeLabel =
-                course.course_type?.charAt(0).toUpperCase() +
-                course.course_type?.slice(1);
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Type
+                  </th>
 
-              const levelLabel =
-                course.level?.charAt(0).toUpperCase() + course.level?.slice(1);
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Level
+                  </th>
 
-              const languageLabel =
-                course.language?.charAt(0).toUpperCase() +
-                course.language?.slice(1);
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Language
+                  </th>
 
-              return (
-                <div
-                  key={course.id}
-                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-                >
-                  {/* Thumbnail */}
-                  <div className="relative h-48 overflow-hidden bg-gray-100">
-                    {course.thumbnail ? (
-                      <Image
-                        src={course.thumbnail}
-                        alt={course.title}
-                        fill
-                        className="object-cover transition duration-300 "
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center">
-                        <LuBookOpen className="text-4xl text-gray-300" />
-                      </div>
-                    )}
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Price
+                  </th>
 
-                    {/* Status */}
-                    <div className="absolute left-3 top-3">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          course.status === "published"
-                            ? "bg-green-100 text-green-700"
-                            : course.status === "draft"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-gray-100 text-gray-600"
-                        }`}
-                      >
-                        {statusLabel}
-                      </span>
-                    </div>
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Status
+                  </th>
 
-                    {/* Type */}
-                    <div className="absolute right-3 top-3">
-                      <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-700 backdrop-blur">
-                        {typeLabel}
-                      </span>
-                    </div>
-                  </div>
+                  <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Start Date
+                  </th>
 
-                  {/* Content */}
-                  <div className="p-5">
-                    {/* Language / Level */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-gray-500">
-                        {languageLabel}
-                      </span>
+                  <th className="px-5 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
 
-                      <span className="text-gray-300">•</span>
+              <tbody className="divide-y divide-gray-100">
+                {filteredCourses.map((course) => {
+                  // console.log(course);
+                  const price = Number(course.price || 0);
+                  const discountPrice = Number(course.discount_price || 0);
 
-                      <span className="text-xs font-medium text-gray-500">
-                        {levelLabel}
-                      </span>
-                    </div>
+                  const statusLabel =
+                    course.status?.charAt(0).toUpperCase() +
+                    course.status?.slice(1);
 
-                    {/* Title */}
-                    <h2 className="line-clamp-2 text-base font-semibold leading-6 text-gray-900">
-                      {course.title}
-                    </h2>
+                  const typeLabel =
+                    course.course_type?.charAt(0).toUpperCase() +
+                    course.course_type?.slice(1);
 
-                    {/* Description */}
-                    <p className="mt-2 line-clamp-2 text-sm leading-5 text-gray-500">
-                      {course.short_description || "No description available."}
-                    </p>
+                  const levelLabel =
+                    course.level?.charAt(0).toUpperCase() +
+                    course.level?.slice(1);
 
-                    {/* date & price */}
-                    <div className="flex items-center justify-between">
-                      <div className="mt-4 text-xs text-gray-400">
-                        {course.start_date ? (
-                          <>
-                            Start:{" "}
-                            {new Date(course.start_date).toLocaleDateString()}
-                          </>
-                        ) : (
-                          "No start date"
-                        )}
-                      </div>
+                  const languageLabel =
+                    course.language?.charAt(0).toUpperCase() +
+                    course.language?.slice(1);
 
-                      <div className="mt-5 flex items-center gap-2">
+                  return (
+                    <tr key={course.id} className="transition hover:bg-gray-50">
+                      {/* Course */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleViewLessons(course)}
+                            className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100 cursor-pointer"
+                          >
+                            {course.thumbnail ? (
+                              <Image
+                                src={course.thumbnail}
+                                alt={course.title}
+                                fill
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center">
+                                <LuBookOpen className="text-xl text-gray-300" />
+                              </div>
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => handleViewLessons(course)}
+                            className="max-w-[250px]"
+                          >
+                            <h2 className="line-clamp-1 font-semibold text-gray-900">
+                              {course.title}
+                            </h2>
+
+                            <p className="mt-1 line-clamp-1 text-sm text-gray-500">
+                              {course.short_description ||
+                                "No description available."}
+                            </p>
+                          </button>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="px-4 py-4">
+                        <span className="text-sm text-gray-600">
+                          {course.category?.name || "N/A"}
+                        </span>
+                      </td>
+
+                      {/* Type */}
+                      <td className="px-4 py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            course.course_type === "free"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          {typeLabel}
+                        </span>
+                      </td>
+
+                      {/* Level */}
+                      <td className="px-4 py-4">
+                        <span className="text-sm text-gray-600">
+                          {levelLabel}
+                        </span>
+                      </td>
+
+                      {/* Language */}
+                      <td className="px-4 py-4">
+                        <span className="text-sm text-gray-600">
+                          {languageLabel}
+                        </span>
+                      </td>
+
+                      {/* Price */}
+                      <td className="px-4 py-4">
                         {course.course_type === "free" ? (
-                          <span className="text-lg font-bold text-green-600">
+                          <span className="font-semibold text-green-600">
                             Free
                           </span>
                         ) : (
-                          <>
-                            <span className="text-lg font-bold text-gray-900 flex items-center">
+                          <div className="flex flex-col">
+                            <span className="flex items-center font-bold text-gray-900">
                               <TbCurrencyTaka />
                               {discountPrice > 0 ? discountPrice : price}
                             </span>
 
                             {discountPrice > 0 && discountPrice < price && (
-                              <span className="text-sm line-through flex items-center text-red-500">
+                              <span className="flex items-center text-xs text-red-500 line-through">
                                 <TbCurrencyTaka />
                                 {price}
                               </span>
                             )}
-                          </>
+                          </div>
                         )}
-                      </div>
-                    </div>
+                      </td>
 
-                    {/* Actions */}
-                    <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4">
-                      <button
-                        type="button"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-400 py-2.5 text-sm font-medium text-black transition hover:bg-yellow-500"
-                        onClick={() => handleEdit(course)}
-                      >
-                        <LuPencil />
-                        Edit
-                      </button>
+                      {/* Status */}
+                      <td className="px-4 py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            course.status === "published"
+                              ? "bg-green-100 text-green-700"
+                              : course.status === "draft"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
+                          {statusLabel}
+                        </span>
+                      </td>
 
-                      <button
-                        type="button"
-                        disabled={deletingCourseId === course.id}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-500 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                        onClick={() => handleDeleteCourse(course.id)}
-                      >
-                        {deletingCourseId === course.id ? (
-                          <>
-                            <span
-                              className="h-4 w-4 animate-spin rounded-full border-2 border-red-500/30 border-t-red-500"
-                              aria-hidden="true"
-                            />
-                            Deleting...
-                          </>
-                        ) : (
-                          <>
-                            <LuTrash2 />
-                            Delete
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                      {/* Start Date */}
+                      <td className="px-4 py-4">
+                        <span className="whitespace-nowrap text-sm text-gray-500">
+                          {course.start_date
+                            ? new Date(course.start_date).toLocaleDateString()
+                            : "No date"}
+                        </span>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleCreateLessons(course)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-200 text-black transition hover:bg-gray-300 cursor-pointer"
+                            title="Add Lessons"
+                          >
+                            <MdLibraryAdd size={18} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleEdit(course)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400 text-black transition hover:bg-yellow-500 cursor-pointer"
+                            title="Edit Course"
+                          >
+                            <LuPencil size={17} />
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={deletingCourseId === course.id}
+                            onClick={() => handleDeleteCourse(course.id)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                            title="Delete Course"
+                          >
+                            {deletingCourseId === course.id ? (
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-red-500/30 border-t-red-500" />
+                            ) : (
+                              <LuTrash2 size={17} />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">

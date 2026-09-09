@@ -24,34 +24,11 @@ import { TbCategory, TbFreezeColumn } from "react-icons/tb";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { MdManageHistory, MdOutlineVideoStable } from "react-icons/md";
 import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
-
-const CoursesIcon = () => (
-  <span className="text-2xl">
-    <LiaBookSolid />
-  </span>
-);
-const FreeVideosIcon = () => (
-  <span className="text-2xl">
-    <CiVideoOn />
-  </span>
-);
-const CreateIcon = () => (
-  <span className="text-2xl">
-    <CiCirclePlus />
-  </span>
-);
-
-const SettingsIcon = () => (
-  <span className="text-2xl">
-    <IoCreateOutline />
-  </span>
-);
-
-const CategoryIcon = () => (
-  <span className="text-2xl">
-    <TbCategory />
-  </span>
-);
+import CreateLesson from "./ManageLesson/CreateLesson";
+import ListLesson from "./ManageLesson/ListLesson";
+import EditLesson from "./ManageLesson/EditLesson";
+import AddLessonInfo from "./ManageLesson/AddLessonInfo";
+import LessonInformation from "./ManageLesson/LessonInformation";
 
 const ManageCourse = ({ profileData }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -83,21 +60,39 @@ const ManageCourse = ({ profileData }) => {
       case "category-list":
         return <CategoryList />;
 
+      case "create-lessons":
+        return <CreateLesson />;
+
+      case "list-lessons":
+        return <ListLesson />;
+
+      case "edit-lesson":
+        return <EditLesson />;
+
+      case "create-lesson-information":
+        return <AddLessonInfo />;
+
+      case "lesson-information":
+        return <LessonInformation />;
+
+      case "lesson-information":
+        return <LessonInformation />;
+
       default:
         return <div className="p-6">Select an option</div>;
     }
   };
 
   const navItems = [
-    { id: "all-courses", label: "All Courses", icon: <CoursesIcon /> },
-    { id: "all-free-videos", label: "Free Videos", icon: <FreeVideosIcon /> },
+    { id: "all-courses", label: "All Courses", icon: <LiaBookSolid /> },
+    { id: "all-free-videos", label: "Free Videos", icon: <CiVideoOn /> },
     {
       id: "create-free-video",
       label: "Create Free Video",
-      icon: <CreateIcon />,
+      icon: <CiCirclePlus />,
     },
-    { id: "create-course", label: "Create Course", icon: <SettingsIcon /> },
-    { id: "category-list", label: "Categories", icon: <CategoryIcon /> },
+    { id: "create-course", label: "Create Course", icon: <IoCreateOutline /> },
+    { id: "category-list", label: "Categories", icon: <TbCategory /> },
   ];
 
   useEffect(() => {
@@ -152,7 +147,6 @@ const ManageCourse = ({ profileData }) => {
           }
         `}
       >
-        {/* Sidebar header */}
         <div
           className={`
     flex items-center
@@ -172,7 +166,6 @@ const ManageCourse = ({ profileData }) => {
             </Link>
           )}
 
-          {/* Desktop collapse button */}
           <button
             type="button"
             onClick={toggleSidebar}
@@ -222,18 +215,17 @@ const ManageCourse = ({ profileData }) => {
               <span
                 className={`
           flex items-center justify-center
-          shrink-0
+          shrink-0 
           ${isSidebarCollapsed ? "" : "mr-3"}
         `}
               >
                 {cloneElement(item.icon, {
                   className: `
             transition-all duration-200
-            ${isSidebarCollapsed ? "text-4xl" : "text-xl"}
+            ${isSidebarCollapsed ? "text-2xl" : "text-2xl"}
           `,
                 })}
               </span>
-
               {!isSidebarCollapsed && (
                 <span className="truncate">{item.label}</span>
               )}
