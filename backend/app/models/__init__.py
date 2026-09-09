@@ -6,3 +6,5 @@ from .module import Module
 from .lesson import Lesson
 from .enrollment import Enrollment
 from .payment import Payment
+
+from .lesson import Lesson, LessonVideo, LessonVideoProgress

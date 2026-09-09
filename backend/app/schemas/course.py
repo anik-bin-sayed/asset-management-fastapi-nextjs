@@ -31,6 +31,14 @@ class CourseCreate(BaseModel):
     category_id: int | None = None
 
 
+class CategoryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    description: str
+
+
 class CourseResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -40,6 +48,8 @@ class CourseResponse(BaseModel):
 
     short_description: str
     description: str
+
+    category: CategoryResponse
 
     thumbnail: str | None
 

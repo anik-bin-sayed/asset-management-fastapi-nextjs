@@ -53,10 +53,3 @@ class Module(Base):
         "Course",
         back_populates="modules",
     )
-
-    lessons = relationship(
-        "Lesson",
-        back_populates="module",
-        cascade="all, delete-orphan",
-        order_by="Lesson.position",
-    )
