@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
 
 const Hero = () => {

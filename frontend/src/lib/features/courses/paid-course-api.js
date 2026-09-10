@@ -48,6 +48,22 @@ export const paidCourseApi = createApi({
       }),
       invalidatesTags: ["Course"],
     }),
+
+    getUpcomingCourse: builder.query({
+      query: () => ({
+        url: `/courses/upcoming`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
+    getUpcomingCourseEight: builder.query({
+      query: () => ({
+        url: `/courses/upcoming-eight`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
   }),
 });
 
@@ -58,4 +74,7 @@ export const {
   useGetCourseBySlugQuery,
 
   useUpdateCourseMutation,
+
+  useGetUpcomingCourseQuery,
+  useGetUpcomingCourseEightQuery,
 } = paidCourseApi;

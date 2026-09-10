@@ -1,15 +1,12 @@
 "use client";
 
+import Home from "../components/Home";
+
 import { useGetSomeFreeCourseQuery } from "../lib/features/courses/free-course-api";
-import Home from "../pages/Home";
-import Loader from "../utils/Loader";
-import React from "react";
 
 const Page = () => {
   const { data: someFreeCourseData, isLoading: freeCourseLoading } =
     useGetSomeFreeCourseQuery();
-
-  if (freeCourseLoading) return <Loader />;
 
   return (
     <div>

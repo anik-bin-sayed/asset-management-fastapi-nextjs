@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Loader from "../../utils/Loader";
 import FreeCoursesContent from "../../components/FreeCourses/FreeCoursesContent";
+import HeroSection from "../../components/FreeCourses/HeroSection";
 
 const Page = async ({ searchParams }) => {
   const params = await searchParams;
@@ -9,6 +10,7 @@ const Page = async ({ searchParams }) => {
 
   return (
     <Suspense fallback={<Loader />}>
+      <HeroSection />
       <FreeCoursesContent currentPage={currentPage} />
     </Suspense>
   );
