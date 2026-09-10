@@ -227,3 +227,27 @@ class CourseService:
             db,
             course,
         )
+
+    @staticmethod
+    def get_upcoming_courses(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+    ):
+        courses, total = CourseRepository.get_upcoming_courses(
+            db=db,
+            page=page,
+            limit=limit,
+        )
+
+        return {
+            "data": courses,
+            "total": total,
+            "page": page,
+            "limit": limit,
+            "total_pages": (total + limit - 1) // limit,
+        }
+
+    @staticmethod
+    def get_upcoming_courses(db: Session):
+        return CourseRepository.get_upcoming_courses_first_eight(db)

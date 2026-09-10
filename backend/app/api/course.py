@@ -197,3 +197,23 @@ async def update_course(
         thumbnail=thumbnail,
         current_user=current_user,
     )
+
+
+@router.get("/upcoming")
+def get_upcoming_courses(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    return CourseService.get_upcoming_courses(
+        db=db,
+        page=page,
+        limit=limit,
+    )
+
+
+@router.get("/upcoming-eight")
+def get_upcoming_courses(
+    db: Session = Depends(get_db),
+):
+    return CourseService.get_upcoming_courses(db)

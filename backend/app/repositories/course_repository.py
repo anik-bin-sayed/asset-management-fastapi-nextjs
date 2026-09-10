@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from app.models.course import Course
@@ -75,3 +77,37 @@ class CourseRepository:
         db.refresh(course)
 
         return course
+
+    @staticmethod
+    def get_upcoming_courses(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+    ):
+        query = (
+            db.query(Course)
+            .filter(
+                Course.start_date.isnot(None),
+                Course.start_date > datetime.now(),
+            )
+            .order_by(Course.start_date.asc())
+        )
+
+        total = query.count()
+
+        courses = query.offset((page - 1) * limit).limit(limit).all()
+
+        return courses, total
+
+    @staticmethod
+    def get_upcoming_courses_first_eight(db: Session):
+        return (
+            db.query(Course)
+            .filter(
+                Course.start_date.isnot(None),
+                Course.start_date > datetime.now(),
+            )
+            .order_by(Course.start_date.asc())
+            .limit(8)
+            .all()
+        )
