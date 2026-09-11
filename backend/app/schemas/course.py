@@ -64,6 +64,8 @@ class CourseResponse(BaseModel):
     language: CourseLanguage
     status: CourseStatus
 
+    total_lessons: int = 0
+
 
 class CourseListResponse(BaseModel):
 

@@ -217,3 +217,17 @@ def get_upcoming_courses(
     db: Session = Depends(get_db),
 ):
     return CourseService.get_upcoming_courses(db)
+
+
+@router.get(
+    "/{course_id}",
+    response_model=CourseResponse,
+)
+async def get_course_by_id(
+    course_id: int,
+    db: Session = Depends(get_db),
+):
+    return await CourseService.get_by_id(
+        db=db,
+        course_id=course_id,
+    )

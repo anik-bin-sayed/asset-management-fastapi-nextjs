@@ -8,7 +8,7 @@ from app.repositories.category_repository import CategoryRepository
 from app.repositories.course_repository import CourseRepository
 from app.utils.slug import generate_slug
 
-from app.schemas.course import CourseCreate, UpdateCourse
+from app.schemas.course import CourseCreate, UpdateCourse, CourseResponse
 from app.utils.cloudinary import upload_image, delete_image
 from app.core.dependencies import admin_instructor_required
 
@@ -251,3 +251,36 @@ class CourseService:
     @staticmethod
     def get_upcoming_courses(db: Session):
         return CourseRepository.get_upcoming_courses_first_eight(db)
+
+    @staticmethod
+    async def get_by_id(
+        db: Session,
+        course_id: int,
+    ):
+
+        # First find course
+        course = CourseRepository.get_by_id(
+            db,
+            course_id,
+        )
+
+        # If course doesn't exist
+        if not course:
+            raise HTTPException(
+                status_code=404,
+                detail="Course not found.",
+            )
+
+        # Count total lessons
+        total_lessons = CourseRepository.get_total_lessons(
+            db,
+            course_id,
+        )
+
+        # Convert SQLAlchemy object to Pydantic response
+        response = CourseResponse.model_validate(course)
+
+        # Add total lessons
+        response.total_lessons = total_lessons
+
+        return response

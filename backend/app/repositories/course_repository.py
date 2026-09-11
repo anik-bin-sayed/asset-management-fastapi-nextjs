@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.models.course import Course
+from app.models.lesson import Lesson
 
 
 class CourseRepository:
@@ -26,7 +28,6 @@ class CourseRepository:
 
     @staticmethod
     def get_by_slug(db: Session, slug: str):
-
         return db.query(Course).filter(Course.slug == slug).first()
 
     @staticmethod
@@ -111,3 +112,16 @@ class CourseRepository:
             .limit(8)
             .all()
         )
+
+    @staticmethod
+    def get_total_lessons(
+        db: Session,
+        course_id: int,
+    ):
+        total_lessons = (
+            db.query(func.count(Lesson.id))
+            .filter(Lesson.course_id == course_id)
+            .scalar()
+        )
+
+        return total_lessons or 0
