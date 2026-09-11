@@ -8,7 +8,7 @@ import { SiGoogledisplayandvideo360 } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-gray-200 bg-gray-800 text-gray-300">
+    <footer className="border-t border-gray-200 bg-yellow-100 text-gray-300">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -18,12 +18,12 @@ const Footer = () => {
                 <SiGoogledisplayandvideo360 className="h-5 w-5 text-gray-950" />
               </div>
 
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-gray-800">
                 Learn<span className="text-yellow-400">Hub</span>
               </h2>
             </div>
 
-            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-400">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-800">
               Learn new skills, improve your knowledge and grow your career with
               our free and premium video courses.
             </p>
@@ -60,45 +60,46 @@ const Footer = () => {
           </div>
           {/* Courses */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-black">
               Courses
             </h3>
 
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-5 space-y-3 text-sm text-black">
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <a href="#" className="transition hover:text-gray-700">
                   Free Courses
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <a href="#" className="transition hover:text-gray-700">
                   Paid Courses
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <a href="#" className="transition hover:text-gray-700">
                   Programming
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <a href="#" className="transition hover:text-gray-700">
                   Web Development
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <a href="#" className="transition hover:text-gray-700">
                   Data Structures
                 </a>
               </li>
             </ul>
           </div>
+
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-black">
               Quick Links
             </h3>
 
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-5 space-y-3 text-sm text-black">
               <li>
                 <a href="#" className="transition hover:text-yellow-400">
                   Home

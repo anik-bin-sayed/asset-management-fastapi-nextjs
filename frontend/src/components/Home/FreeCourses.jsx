@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
+import { FaPlay } from "react-icons/fa";
+
+import { toast } from "sonner";
 
 const FreeCourses = ({ data, loading }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -54,6 +57,15 @@ const FreeCourses = ({ data, loading }) => {
     );
   }
 
+  const handleWatchFreeCourse = (course) => {
+    if (!isAuthenticated) {
+      toast.error("Please Login to watch!");
+      return;
+    }
+
+    setSelectedCourse(course);
+  };
+
   return (
     <div className="px-4 py-12 flex items-center justify-center">
       <div className="max-w-7xl border p-10 rounded-xl border-gray-100 shadow bg-gray-800">
@@ -93,19 +105,33 @@ const FreeCourses = ({ data, loading }) => {
           {data.map((course) => (
             <div
               key={course.id}
-              className="flex flex-col overflow-hidden rounded bg-white shadow-lg transition-transform duration-300  border border-yellow-100"
+              className="group flex flex-col overflow-hidden rounded ring-1 ring-yellow-100 bg-white shadow-lg transition-all duration-300 hover:ring-0 "
             >
               {/* Image */}
-              <div className="relative h-48 w-full">
+              <div
+                onClick={() => handleWatchFreeCourse(course)}
+                disabled={!isAuthenticated}
+                className="group relative h-48 w-full overflow-hidden cursor-pointer"
+              >
                 <Image
                   src={course.thumbnail}
                   alt={course.title}
                   fill
-                  className="object-cover"
+                  className="object-cover transition duration-300 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-              </div>
 
+                {/* Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20  transition duration-300 ">
+                  <button
+                    type="button"
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-red-700 text-gray-100 shadow-lg transition-transform duration-200 hover:scale-110 cursor-pointer"
+                  >
+                    {/* Pause Icon */}
+                    <FaPlay className="ml-1 text-xl text-gray-100" />
+                  </button>
+                </div>
+              </div>
               {/* Content */}
               <div className="flex grow flex-col p-5">
                 <h2 className="line-clamp-2 text-xl font-bold text-gray-900">
@@ -131,17 +157,11 @@ const FreeCourses = ({ data, loading }) => {
                 {/* Watch button */}
                 <div className="mt-5">
                   <button
-                    onClick={() => {
-                      if (!isAuthenticated) {
-                        return;
-                      }
-
-                      setSelectedCourse(course);
-                    }}
+                    onClick={() => handleWatchFreeCourse(course)}
                     disabled={!isAuthenticated}
                     className={`w-full rounded-lg px-4 py-2.5 text-center font-medium transition-colors duration-200 ${
                       isAuthenticated
-                        ? "cursor-pointer bg-yellow-400 text-black hover:bg-yellow-500"
+                        ? "cursor-pointer bg-gray-700 text-white hover:bg-gray-800"
                         : "cursor-not-allowed bg-gray-200 text-gray-500"
                     }`}
                   >

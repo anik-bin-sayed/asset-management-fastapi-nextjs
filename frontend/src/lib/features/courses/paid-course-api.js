@@ -40,6 +40,14 @@ export const paidCourseApi = createApi({
       providesTags: ["Course"],
     }),
 
+    getCourseById: builder.query({
+      query: (id) => ({
+        url: `/courses/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
     updateCourse: builder.mutation({
       query: ({ id, data }) => ({
         url: `/courses/${id}/update`,
@@ -74,6 +82,8 @@ export const {
   useGetCourseBySlugQuery,
 
   useUpdateCourseMutation,
+
+  useGetCourseByIdQuery,
 
   useGetUpcomingCourseQuery,
   useGetUpcomingCourseEightQuery,

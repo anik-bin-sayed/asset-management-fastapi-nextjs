@@ -3,6 +3,10 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import VideoModal from "../Home/VideoModal";
 
+import { FaPlay } from "react-icons/fa";
+
+import { toast } from "sonner";
+
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
 import { RiVideoUploadFill } from "react-icons/ri";
 
@@ -30,6 +34,15 @@ const FreeCourses = ({
     if (onPageChange && newPage >= 1 && newPage <= total_pages) {
       onPageChange(newPage);
     }
+  };
+
+  const handleWatchFreeCourse = (course) => {
+    if (!isAuthenticated) {
+      toast.error("Please Login to watch!");
+      return;
+    }
+
+    setSelectedCourse(course);
   };
 
   return (
@@ -73,63 +86,71 @@ const FreeCourses = ({
         </div>
 
         {/* Course Grid */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto">
+        {/* Course Grid */}
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {data.map((course) => (
             <div
               key={course.id}
-              className="bg-white rounded shadow-lg overflow-hidden transition-transform duration-300  flex flex-col"
+              className="group flex flex-col overflow-hidden rounded-md ring-1 ring-gray-300 bg-white transition-all duration-300 hover:ring-0 "
             >
-              {/* Thumbnail */}
-              <div className="relative h-48 w-full bg-gray-200">
+              {/* Image */}
+              <div
+                onClick={() => handleWatchFreeCourse(course)}
+                disabled={!isAuthenticated}
+                className="group relative h-48 w-full overflow-hidden cursor-pointer"
+              >
                 <Image
                   src={course.thumbnail}
-                  alt={course.title || course.description}
+                  alt={course.title}
                   fill
-                  className="object-cover"
+                  className="object-cover transition duration-300 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-              </div>
 
+                {/* Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20  transition duration-300 ">
+                  <button
+                    type="button"
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-red-700 text-gray-100 shadow-lg transition-transform duration-200 hover:scale-110 cursor-pointer"
+                  >
+                    {/* Pause Icon */}
+                    <FaPlay className="ml-1 text-xl text-gray-100" />
+                  </button>
+                </div>
+              </div>
               {/* Content */}
-              <div className="p-5 flex flex-col grow">
-                <h2 className="text-xl font-bold text-gray-900 line-clamp-2">
-                  {course.title || course.description}
+              <div className="flex grow flex-col p-5">
+                <h2 className="line-clamp-2 text-xl font-bold text-gray-900">
+                  {course.title}
                 </h2>
-                <p className="mt-2 text-sm text-gray-600 line-clamp-2 grow">
+
+                <p className="mt-2 line-clamp-2 grow text-sm text-gray-600">
                   {course.description || course.short_description}
                 </p>
 
-                {/* Meta: duration & language */}
+                {/* Meta */}
                 <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                  {course.duration && (
-                    <span className="flex items-center">
-                      <span className="mr-1">⏱</span> {course.duration}
-                    </span>
-                  )}
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {course.language || "English"}
+                  <span className="flex items-center">
+                    <span className="mr-1">⏱</span>
+                    {course.duration}
+                  </span>
+
+                  <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                    {course.language}
                   </span>
                 </div>
 
                 {/* Watch button */}
                 <div className="mt-5">
                   <button
-                    onClick={() => {
-                      if (!isAuthenticated) {
-                        return;
-                      }
-
-                      setSelectedCourse(course);
-                    }}
+                    onClick={() => handleWatchFreeCourse(course)}
                     disabled={!isAuthenticated}
-                    className={`w-full rounded-lg px-4 py-2.5 text-center font-medium transition-colors duration-200 flex items-center gap-2 justify-center ${
+                    className={`w-full rounded-lg px-4 py-2.5 text-center font-medium transition-colors duration-200 ${
                       isAuthenticated
-                        ? "cursor-pointer bg-yellow-400 text-black hover:bg-yellow-500"
+                        ? "cursor-pointer bg-gray-700 text-white hover:bg-gray-800"
                         : "cursor-not-allowed bg-gray-200 text-gray-500"
                     }`}
                   >
-                    <RiVideoUploadFill />
-
                     {isAuthenticated ? "Watch Now" : "Login to Watch"}
                   </button>
                 </div>

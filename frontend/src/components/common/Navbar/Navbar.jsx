@@ -161,12 +161,12 @@ const Navbar = () => {
               Free Courses
             </Link>
 
-            <a
-              href="#"
+            <Link
+              href="/upcoming-course"
               className="flex items-center justify-center  bg-gray-200 hover:outline outline-black/40 text-black px-4 py-2 rounded-md text-md cursor-pointer"
             >
               All Courses
-            </a>
+            </Link>
 
             {/* Dashboard */}
             {profileData && (

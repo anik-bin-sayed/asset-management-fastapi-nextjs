@@ -32,7 +32,7 @@ import { useUploadAvatarMutation } from "../../lib/features/profile/profileApi";
 import Link from "next/link";
 import CountryFlag from "./ui/CountryFlag";
 
-const ProfileComponent = () => {
+const Profile = () => {
   const [copied, setCopied] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const fileInputRef = useRef(null);
@@ -306,4 +306,4 @@ const InfoCard = ({ icon, title, value }) => {
   );
 };
 
-export default ProfileComponent;
+export default Profile;
