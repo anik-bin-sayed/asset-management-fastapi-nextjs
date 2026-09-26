@@ -12,7 +12,9 @@ export default function LayoutWrapper({ children }) {
     pathname === "/profile/edit" ||
     pathname.startsWith("/admin/manage-course");
 
-  const hideFooter = pathname.startsWith("/admin/manage-course");
+  const hideFooter =
+    pathname.startsWith("/admin/manage-course") ||
+    pathname.startsWith("/admin/users");
 
   return (
     <>

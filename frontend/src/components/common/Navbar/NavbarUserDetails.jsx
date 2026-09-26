@@ -138,7 +138,7 @@ const NavbarUserDetails = ({ profileData }) => {
 
             {/* Profile */}
             <Link
-              href="/admin/profile"
+              href="/profile"
               onClick={handleProfile}
               className="
                 w-full

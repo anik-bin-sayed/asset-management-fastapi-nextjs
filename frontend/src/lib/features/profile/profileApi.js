@@ -48,6 +48,15 @@ export const profileApi = createApi({
 
       providesTags: ["User"],
     }),
+
+    userRoleChange: builder.mutation({
+      query: ({ user_id, formData }) => ({
+        url: `/users/${user_id}/role`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -56,4 +65,6 @@ export const {
   useUpdateProfileInfoMutation,
   useAllUsersQuery,
   useUserProfileQuery,
+
+  useUserRoleChangeMutation,
 } = profileApi;

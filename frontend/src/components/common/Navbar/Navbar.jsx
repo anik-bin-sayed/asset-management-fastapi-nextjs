@@ -35,7 +35,7 @@ const Navbar = () => {
 
   // redux
   const { data: profileData, isLoading } = useGetProfileQuery();
-  // console.log("profileData", profileData);
+  console.log("profileData", profileData);
 
   // Handle scroll
   const handleScroll = () => {
@@ -134,9 +134,8 @@ const Navbar = () => {
       {/* Navbar */}
       <nav
         ref={navRef}
-        className={`bg-white backdrop-blur-md shadow-lg border-b border-gray-100/50 px-4 sm:px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          showNavbar ? "translate-y-0" : "-translate-y-full"
-        }`}
+        className={`bg-white backdrop-blur-md shadow-lg border-b border-gray-100/50 px-4 sm:px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"
+          }`}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-4">
@@ -212,19 +211,16 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
-              }`}
+              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
             />
             <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "opacity-0" : ""
-              }`}
+              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""
+                }`}
             />
             <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
-              }`}
+              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
             />
           </button>
         </div>
@@ -233,9 +229,8 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         ref={menuRef}
-        className={`fixed top-19 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-19 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {!isLoading && profileData && (
           <MobileNavUserDetails profileData={profileData} />
@@ -244,7 +239,8 @@ const Navbar = () => {
           <div className="space-y-2">
             {profileData && (
               <div>
-                {profileData && profileData?.role === "admin" ? (
+                {(profileData && profileData?.role === "admin") ||
+                  profileData?.role === "instructor" ? (
                   <Link
                     href="/admin/manage-course"
                     // onClick={handleProfile}

@@ -9,17 +9,20 @@ import {
   FiList,
   FiSave,
   FiArrowLeft,
+  FiLoader,
 } from "react-icons/fi";
 // import { useCreateLessonVideoMutation } from ".././../../lib/features/lesson/lessonVideoApi";
 import { useSearchParams } from "next/navigation";
 import { useCreateLessonVideoMutation } from "../../../../lib/features/lesson/lessonVideoApi";
+import { toast } from "sonner";
+
+
 
 const AddLessonInfo = () => {
   const searchParams = useSearchParams();
 
   const lessonId = searchParams.get("lesson_id");
 
-  console.log(lessonId);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -56,6 +59,7 @@ const AddLessonInfo = () => {
         lesson_id: lessonId,
       });
     } catch (error) {
+      toast.error(error?.data?.detail || "Something broke to add Data");
       console.log(error);
     }
   };
@@ -118,7 +122,8 @@ const AddLessonInfo = () => {
                 onChange={handleChange}
                 placeholder="Enter video title"
                 required
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                disabled={creating}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -138,8 +143,9 @@ const AddLessonInfo = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows={5}
+                disabled={creating}
                 placeholder="Write a short description about this video..."
-                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -161,7 +167,8 @@ const AddLessonInfo = () => {
                 onChange={handleChange}
                 placeholder="https://example.com/video.mp4"
                 required
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                disabled={creating}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100 disabled:cursor-not-allowed"
               />
 
               <p className="mt-2 text-xs text-gray-400">
@@ -188,8 +195,23 @@ const AddLessonInfo = () => {
                   min="0"
                   value={formData.duration}
                   onChange={handleChange}
+                  onKeyDown={(e) => {
+                    if (
+                      !/[0-9]/.test(e.key) &&
+                      ![
+                        "Backspace",
+                        "Delete",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "Tab",
+                      ].includes(e.key)
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                    disabled={creating}
                   placeholder="Duration in seconds"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100 disabled:cursor-not-allowed"
                 />
 
                 <p className="mt-2 text-xs text-gray-400">
@@ -214,8 +236,9 @@ const AddLessonInfo = () => {
                   min="0"
                   value={formData.position}
                   onChange={handleChange}
+                  disabled={creating}
                   placeholder="Enter position"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-yellow-500 focus:bg-white focus:ring-4 focus:ring-yellow-100 disabled:cursor-not-allowed"
                 />
 
                 <p className="mt-2 text-xs text-gray-400">
@@ -229,9 +252,14 @@ const AddLessonInfo = () => {
           <div className="mt-8 flex justify-end border-t border-gray-100 pt-6">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-xl bg-yellow-400 px-6 py-3 text-sm font-semibold text-black shadow-sm transition-all duration-200 hover:bg-yellow-500 hover:shadow-lg active:scale-95"
+              disabled={creating}
+              className="inline-flex items-center gap-2 rounded-xl bg-yellow-400 px-6 py-3 text-sm font-semibold text-black shadow-sm transition-all duration-200 hover:bg-yellow-500 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed"
             >
-              <FiSave size={18} />
+              {creating ? (
+                <FiLoader className="animate-spin" size={18} />
+              ) : (
+                <FiSave size={18} />
+              )}
               Save Video
             </button>
           </div>

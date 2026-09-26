@@ -39,6 +39,7 @@ const ManageCourse = ({ profileData }) => {
     switch (activeTab) {
       case "all-courses":
         return <AllCourse />;
+
       case "all-free-videos":
         return <FreeVideoList />;
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import RoleChangeModal from "./RoleChangeModal";
 
 const AllUser = ({
   users = [],
@@ -221,41 +222,10 @@ const AllUser = ({
 
       {/* Role Change Modal */}
       {showRoleModal && selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-            <h3 className="text-lg font-medium mb-4">
-              Change Role for {selectedUser.name || selectedUser.id}
-            </h3>
-            <div className="space-y-2">
-              <button
-                onClick={() => handleRoleChange(selectedUser.id, "admin")}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded"
-              >
-                Admin
-              </button>
-              <button
-                onClick={() => handleRoleChange(selectedUser.id, "user")}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded"
-              >
-                User
-              </button>
-              <button
-                onClick={() => handleRoleChange(selectedUser.id, "moderator")}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded"
-              >
-                Moderator
-              </button>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={() => setShowRoleModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <RoleChangeModal
+          selectedUser={selectedUser}
+          setShowRoleModal={setShowRoleModal}
+        />
       )}
     </div>
   );

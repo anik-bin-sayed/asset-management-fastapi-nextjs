@@ -16,6 +16,8 @@ import { GoArrowLeft } from "react-icons/go";
 import { useState } from "react";
 import { MdInfo } from "react-icons/md";
 
+import { toast } from "sonner";
+
 const ListLesson = () => {
   const [deleteLessonId, setDeleteLessonId] = useState(null);
 
@@ -24,8 +26,6 @@ const ListLesson = () => {
 
   const courseId = searchParams.get("course_id");
   const { data: lessons = [] } = useGetCourseLessonsQuery({ id: courseId });
-
-  console.log(lessons);
 
   const [deleteLesson] = useDeleteLessonMutation();
   // useGetVideoCountAndDurationQuery;
@@ -42,7 +42,9 @@ const ListLesson = () => {
     try {
       await deleteLesson({ id: lessonId }).unwrap();
     } catch (error) {
-      console.error("Failed to delete lesson:", error);
+      toast.error(error?.data?.detail || "Something went wrong!");
+    } finally {
+      setDeleteLessonId(null);
     }
   };
 

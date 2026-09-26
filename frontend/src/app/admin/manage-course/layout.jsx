@@ -1,8 +1,7 @@
-import AdminGuard from "../../../components/auth/AdminGuard";
-import React from "react";
+import AdminInstructorGuard from "../../../components/auth/AdminInstructorGuard";
 
 const layout = ({ children }) => {
-  return <AdminGuard>{children}</AdminGuard>;
+  return <AdminInstructorGuard>{children}</AdminInstructorGuard>;
 };
 
 export default layout;
