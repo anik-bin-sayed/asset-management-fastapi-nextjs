@@ -19,6 +19,10 @@ from app.services.lesson.lesson_video import (
     LessonVideoService,
 )
 
+from app.models.user import User
+
+from app.core.dependencies import admin_instructor_required
+
 router = APIRouter(
     prefix="/lesson-videos",
     tags=["Lesson Videos"],
@@ -33,12 +37,12 @@ router = APIRouter(
 def create_video(
     data: LessonVideoCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
 
     try:
         return LessonVideoService.create_video(
-            db=db,
-            data=data,
+            db=db, data=data, current_user=current_user
         )
 
     except ValueError as error:

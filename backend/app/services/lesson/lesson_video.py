@@ -1,3 +1,5 @@
+from fastapi import Depends, HTTPException
+
 from sqlalchemy.orm import Session
 
 from app.models.lesson.lesson import Lesson
@@ -6,6 +8,11 @@ from app.models.lesson.lesson_video import LessonVideo
 from app.repositories.lesson.lesson_video import (
     LessonVideoRepository,
 )
+
+
+from app.models.user import User
+
+from app.core.dependencies import admin_instructor_required
 
 from app.schemas.lesson.lesson_video import (
     LessonVideoCreate,
@@ -19,6 +26,7 @@ class LessonVideoService:
     def create_video(
         db: Session,
         data: LessonVideoCreate,
+        current_user: User,
     ) -> LessonVideo:
 
         lesson = (
@@ -31,6 +39,9 @@ class LessonVideoService:
 
         if not lesson:
             raise ValueError("Lesson not found")
+
+        if lesson.user_id != current_user.id and current_user.role != "admin":
+            raise HTTPException(status_code=403, detail="This is not your lesson")
 
         return LessonVideoRepository.create(
             db=db,

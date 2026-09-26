@@ -5,6 +5,9 @@ from app.dependencies.database import get_db
 from app.schemas.lesson.lesson import LessonCreate, LessonResponse, LessonUpdate
 from app.services.lesson.lesson import LessonService
 
+from app.core.dependencies import admin_instructor_required, admin_required
+from app.models.user import User
+
 router = APIRouter(
     prefix="/lessons",
     tags=["Lessons"],
@@ -19,11 +22,9 @@ router = APIRouter(
 def create_lesson(
     data: LessonCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
-    return LessonService.create_lesson(
-        db=db,
-        data=data,
-    )
+    return LessonService.create_lesson(db=db, data=data, current_user=current_user)
 
 
 @router.get(
@@ -47,12 +48,12 @@ def get_course_lessons(
 def delete_lesson(
     lesson_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
 
     try:
         LessonService.delete_lesson(
-            db=db,
-            lesson_id=lesson_id,
+            db=db, lesson_id=lesson_id, current_user=current_user
         )
 
     except ValueError as error:

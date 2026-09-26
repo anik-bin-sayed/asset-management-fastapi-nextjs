@@ -14,6 +14,13 @@ class PaymentSuccessRequest(BaseModel):
     transaction_id: str
 
 
+class PaymentInitiateResponse(BaseModel):
+    payment_id: int
+    transaction_id: str
+    amount: str
+    gateway_url: str
+
+
 class PaymentResponse(BaseModel):
     id: int
     enrollment_id: int

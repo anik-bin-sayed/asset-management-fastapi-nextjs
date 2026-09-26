@@ -3,12 +3,9 @@ from datetime import datetime
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.course import CourseStatus
+from app.models.course import Course
 from app.models.enrollment import Enrollment, EnrollmentStatus
-from app.repositories.course_repository import CourseRepository
 from app.repositories.enrollment_repository import EnrollmentRepository
-
-from app.models.course import CourseType
 
 
 class EnrollmentService:
@@ -16,13 +13,15 @@ class EnrollmentService:
     @staticmethod
     def create(
         db: Session,
+        student_id: str,
         course_id: int,
-        current_user,
     ):
 
-        course = CourseRepository.get_by_id(
-            db,
-            course_id,
+        # Check course
+        course = (
+            db.query(Course)
+            .filter(Course.id == course_id)
+            .first()
         )
 
         if not course:
@@ -31,44 +30,79 @@ class EnrollmentService:
                 detail="Course not found",
             )
 
-        if course.status != CourseStatus.PUBLISHED:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="This course is not available for enrollment",
-            )
-
-        now = datetime.utcnow()
-
-        if now >= course.start_date:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Enrollment is closed because the course has already started",
-            )
-
-        existing_enrollment = EnrollmentRepository.get_by_student_and_course(
-            db,
-            current_user.id,
-            course_id,
-        )
-
-        if existing_enrollment:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="You are already enrolled in this course",
-            )
-
-        if course.course_type == CourseType.FREE:
-            enrollment_status = EnrollmentStatus.ACTIVE
-        else:
-            enrollment_status = EnrollmentStatus.PENDING
-
-        enrollment = Enrollment(
-            student_id=current_user.id,
+        # Check existing enrollment
+        existing = EnrollmentRepository.get_by_student_and_course(
+            db=db,
+            student_id=student_id,
             course_id=course_id,
-            status=enrollment_status,
         )
 
-        return EnrollmentRepository.create(
-            db,
-            enrollment,
+        if existing:
+
+            if existing.status == EnrollmentStatus.ACTIVE:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="You are already enrolled in this course",
+                )
+
+            if existing.status == EnrollmentStatus.PENDING:
+                return existing
+
+            if existing.status == EnrollmentStatus.COMPLETED:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="You have already completed this course",
+                )
+
+            # CANCELLED হলে আবার enrollment করার সুযোগ
+            existing.status = EnrollmentStatus.PENDING
+            existing.activated_at = None
+            existing.completed_at = None
+
+            db.commit()
+            db.refresh(existing)
+
+            return existing
+
+        # Create new enrollment
+        enrollment = EnrollmentRepository.create(
+            db=db,
+            student_id=student_id,
+            course_id=course_id,
         )
+
+        return enrollment
+
+    @staticmethod
+    def activate(
+        db: Session,
+        enrollment: Enrollment,
+    ):
+
+        enrollment.status = EnrollmentStatus.ACTIVE
+        enrollment.activated_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(enrollment)
+
+        return enrollment
+
+    @staticmethod
+    def complete(
+        db: Session,
+        enrollment: Enrollment,
+    ):
+
+        if enrollment.status != EnrollmentStatus.ACTIVE:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Only active enrollment can be completed",
+            )
+
+        enrollment.status = EnrollmentStatus.COMPLETED
+        enrollment.completed_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(enrollment)
+
+        return enrollment

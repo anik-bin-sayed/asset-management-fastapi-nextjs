@@ -122,3 +122,12 @@ class User(Base):
         back_populates="student",
         cascade="all, delete-orphan",
     )
+
+    lessons: Mapped[list["Lesson"]] = relationship(
+        "Lesson",
+        back_populates="user",
+    )
+    lessons: Mapped[list["LessonVideo"]] = relationship(
+        "LessonVideo",
+        back_populates="user",
+    )

@@ -139,3 +139,27 @@ class UserService:
         UserRepository.update_refresh_token(db, user, new_refresh_token)
 
         return access_token, new_refresh_token
+
+    @staticmethod
+    def change_role(db: Session, user_id: str, role: str):
+        user = UserRepository.get_by_id(db, user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        allowed_roles = {
+            "student",
+            "instructor",
+            "admin",
+        }
+
+        if role not in allowed_roles:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid role. Allowed roles: student, instructor, admin",
+            )
+
+        return UserRepository.update_role(
+            db=db,
+            user=user,
+            role=role,
+        )

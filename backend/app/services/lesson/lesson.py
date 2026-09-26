@@ -1,20 +1,19 @@
+from fastapi import APIRouter, Depends, status, HTTPException
+
 from sqlalchemy.orm import Session
 
+from app.models.user import User
 from app.repositories.lesson.lesson import LessonRepository
 from app.schemas.lesson.lesson import LessonCreate, LessonUpdate
+
+from app.core.dependencies import admin_instructor_required, admin_required
 
 
 class LessonService:
 
     @staticmethod
-    def create_lesson(
-        db: Session,
-        data: LessonCreate,
-    ):
-        return LessonRepository.create(
-            db=db,
-            data=data,
-        )
+    def create_lesson(db: Session, data: LessonCreate, current_user: User):
+        return LessonRepository.create(db=db, data=data, current_user=current_user)
 
     @staticmethod
     def get_course_lessons(
@@ -61,6 +60,7 @@ class LessonService:
     def delete_lesson(
         db: Session,
         lesson_id: int,
+        current_user: User,
     ) -> None:
 
         lesson = LessonRepository.get_by_id(
@@ -68,9 +68,16 @@ class LessonService:
             lesson_id=lesson_id,
         )
 
+        print(lesson)
+
         if not lesson:
             raise ValueError(
                 "Lesson not found",
+            )
+
+        if lesson.user_id != current_user.id and current_user.role != "admin":
+            raise HTTPException(
+                status_code=403, detail="You are not allowed to modify this lesson"
             )
 
         LessonRepository.delete(

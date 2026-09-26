@@ -66,3 +66,12 @@ class UserRepository:
         users = query.order_by(User.created_at.desc()).offset(offset).limit(limit).all()
 
         return users, total
+
+    @staticmethod
+    def update_role(db: Session, user: User, role: str):
+        user.role = role
+
+        db.commit()
+        db.refresh(user)
+
+        return user

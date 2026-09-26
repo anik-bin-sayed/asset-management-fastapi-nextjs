@@ -92,3 +92,7 @@ class OAuthUser(BaseModel):
     picture: str | None = None
 
     email_verified: bool = False
+
+
+class UserRoleUpdate(BaseModel):
+    role: str

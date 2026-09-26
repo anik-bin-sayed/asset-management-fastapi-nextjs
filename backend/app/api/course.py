@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.dependencies.database import get_db
 
 from app.models.user import User
-from app.models.course import CourseStatus
+from app.models.course import Course
 
 from app.schemas.course import (
     CourseCreate,
@@ -32,6 +32,7 @@ from app.services.course import CourseService
 
 from app.core.dependencies import (
     admin_instructor_required,
+    admin_required,
     student_required,
     get_current_user,
 )
@@ -133,7 +134,9 @@ async def delete_paid_course(
     course_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    admin: User = Depends(admin_required),
 ):
+
     return await CourseService.delete_course(
         db=db, course_id=course_id, current_user=current_user
     )
@@ -173,7 +176,7 @@ async def update_course(
     end_date: datetime | None = Form(None),
     thumbnail: UploadFile | None = File(None),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(admin_instructor_required),
 ):
     data = UpdateCourse(
         title=title,

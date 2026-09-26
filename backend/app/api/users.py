@@ -6,6 +6,10 @@ from app.core.dependencies import get_current_user, admin_required
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 
+from app.schemas.user import UserResponse, UserRoleUpdate
+
+from app.services.user_service import UserService
+
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
@@ -39,3 +43,21 @@ async def get_users(
             "total_pages": (total + limit - 1) // limit,
         },
     }
+
+
+# update user role
+@router.patch(
+    "/{user_id}/role",
+    response_model=UserResponse,
+)
+async def change_user_role(
+    user_id: str,
+    data: UserRoleUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    return UserService.change_role(
+        db=db,
+        user_id=user_id,
+        role=data.role,
+    )

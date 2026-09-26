@@ -1,21 +1,21 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.models.user import User
+
 from app.models.lesson import Lesson, LessonVideo
 from app.schemas.lesson.lesson import LessonCreate, LessonUpdate
 
 
 class LessonRepository:
     @staticmethod
-    def create(
-        db: Session,
-        data: LessonCreate,
-    ) -> Lesson:
+    def create(db: Session, data: LessonCreate, current_user: User) -> Lesson:
         lesson = Lesson(
             title=data.title,
             description=data.description,
             position=data.position,
             course_id=data.course_id,
+            user_id=current_user.id,
         )
 
         db.add(lesson)
@@ -55,33 +55,8 @@ class LessonRepository:
     def get_by_id(
         db: Session,
         lesson_id: int,
-    ) -> Lesson | None:
-
-        return (
-            db.query(
-                Lesson,
-                func.count(LessonVideo.id).label(
-                    "video_count",
-                ),
-                func.coalesce(
-                    func.sum(LessonVideo.duration),
-                    0,
-                ).label(
-                    "total_seconds",
-                ),
-            )
-            .outerjoin(
-                LessonVideo,
-                LessonVideo.lesson_id == Lesson.id,
-            )
-            .filter(
-                Lesson.id == lesson_id,
-            )
-            .group_by(
-                Lesson.id,
-            )
-            .first()
-        )
+    ):
+        return db.query(Lesson).filter(Lesson.id == lesson_id).first()
 
     @staticmethod
     def delete(db: Session, lesson: Lesson) -> None:
