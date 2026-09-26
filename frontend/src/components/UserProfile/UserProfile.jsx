@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserProfileQuery } from "../../lib/features/profile/profileApi";
-import React, { useState } from "react";
+import { useState } from "react";
 import ProfileNavbar from "../Profile/ProfileNavbar";
 import MobileSectionTopBar from "../Profile/MobileSectionTopBar";
 import Image from "next/image";

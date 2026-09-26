@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import Loader from "../../../utils/Loader";
-import AllUser from "../../../components/Admin/AllUser/AllUser";
+import AllUser from "../../../components/Admin/AllUser";
 import { useAllUsersQuery } from "../../../lib/features/profile/profileApi";
 
 const Page = () => {
@@ -38,7 +38,7 @@ const Page = () => {
   };
 
   // Loading and error states
-  if (isLoading) return <Loader />;
+  // if (isLoading) return <Loader />;
   if (isError) return <div>Error occurred while fetching users.</div>;
 
   return (
@@ -49,6 +49,7 @@ const Page = () => {
       setSearch={setSearch}
       onPageChange={handlePageChange}
       onRoleChange={handleRoleChange}
+      isLoading={isLoading}
     />
   );
 };
