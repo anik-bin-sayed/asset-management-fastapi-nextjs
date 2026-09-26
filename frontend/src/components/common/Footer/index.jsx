@@ -1,171 +1,244 @@
-import React from "react";
+import Link from "next/link";
 
 import { FaFacebookF, FaYoutube, FaGithub, FaLinkedinIn } from "react-icons/fa";
-
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
-
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-gray-200 bg-yellow-100 text-gray-300">
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="border-t border-gray-200 bg-white text-gray-600">
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+        {/* Main Footer */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400">
+          <div className="lg:pr-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400 shadow-sm">
                 <SiGoogledisplayandvideo360 className="h-5 w-5 text-gray-950" />
               </div>
 
-              <h2 className="text-xl font-bold text-gray-800">
-                Learn<span className="text-yellow-400">Hub</span>
+              <h2 className="text-xl font-bold tracking-tight text-gray-900">
+                Learn<span className="text-yellow-500">Hub</span>
               </h2>
             </div>
 
-            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-800">
-              Learn new skills, improve your knowledge and grow your career with
-              our free and premium video courses.
+            <p className="mt-5 max-w-sm text-sm leading-6 text-gray-500">
+              Learn new skills, improve your knowledge, and grow your career
+              with our free and premium video courses.
             </p>
 
-            <div className="mt-5 flex gap-3">
-              <a
+            {/* Social Links */}
+            <div className="mt-6 flex items-center gap-3">
+              <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 transition hover:bg-yellow-400 hover:text-gray-950"
+                aria-label="Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 transition-all duration-200 hover:border-yellow-400 hover:bg-yellow-400 hover:text-gray-950"
               >
                 <FaFacebookF className="h-4 w-4" />
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 transition hover:bg-yellow-400 hover:text-gray-950"
+                aria-label="YouTube"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 transition-all duration-200 hover:border-yellow-400 hover:bg-yellow-400 hover:text-gray-950"
               >
                 <FaYoutube className="h-4 w-4" />
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 transition hover:bg-yellow-400 hover:text-gray-950"
+                aria-label="GitHub"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 transition-all duration-200 hover:border-yellow-400 hover:bg-yellow-400 hover:text-gray-950"
               >
                 <FaGithub className="h-4 w-4" />
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 transition hover:bg-yellow-400 hover:text-gray-950"
+                aria-label="LinkedIn"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 transition-all duration-200 hover:border-yellow-400 hover:bg-yellow-400 hover:text-gray-950"
               >
                 <FaLinkedinIn className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
           </div>
+
           {/* Courses */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-black">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
               Courses
             </h3>
 
-            <ul className="mt-5 space-y-3 text-sm text-black">
+            <ul className="mt-5 space-y-3 text-sm">
               <li>
-                <a href="#" className="transition hover:text-gray-700">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Free Courses
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-gray-700">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Paid Courses
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-gray-700">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Programming
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-gray-700">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Web Development
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-gray-700">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Data Structures
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-black">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
               Quick Links
             </h3>
 
-            <ul className="mt-5 space-y-3 text-sm text-black">
+            <ul className="mt-5 space-y-3 text-sm">
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Home
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   About Us
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   All Courses
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Instructors
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="transition hover:text-yellow-400">
+                <Link
+                  href="#"
+                  className="text-gray-500 transition-colors hover:text-yellow-500"
+                >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
+
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
               Get In Touch
             </h3>
 
             <div className="mt-5 space-y-4 text-sm">
               <div className="flex items-start gap-3">
-                <FiMail className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
-                <span>support@learnhub.com</span>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-yellow-50">
+                  <FiMail className="h-4 w-4 text-yellow-500" />
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-400">Email</p>
+                  <span className="text-gray-600">support@learnhub.com</span>
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <FiPhone className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
-                <span>+880 1234-567890</span>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-yellow-50">
+                  <FiPhone className="h-4 w-4 text-yellow-500" />
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-400">Phone</p>
+                  <span className="text-gray-600">+880 1234-567890</span>
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <FiMapPin className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
-                <span>Dhaka, Bangladesh</span>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-yellow-50">
+                  <FiMapPin className="h-4 w-4 text-yellow-500" />
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-400">Location</p>
+                  <span className="text-gray-600">Dhaka, Bangladesh</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {/* Bottom */}
-        <div className="mt-10 border-t border-gray-800 pt-6">
+
+        {/* Bottom Footer */}
+        <div className="mt-12 border-t border-gray-200 pt-6">
           <div className="flex flex-col items-center justify-between gap-4 text-sm md:flex-row">
-            <p className="text-gray-500">
-              © {new Date().getFullYear()} LearnHub. All rights reserved.
+            <p className="text-gray-400">
+              © {new Date().getFullYear()}{" "}
+              <span className="font-medium text-gray-600">LearnHub</span>. All
+              rights reserved.
             </p>
 
-            <div className="flex gap-5">
-              <a href="#" className="transition hover:text-yellow-400">
+            <div className="flex items-center gap-5">
+              <Link
+                href="#"
+                className="text-gray-400 transition-colors hover:text-yellow-500"
+              >
                 Privacy Policy
-              </a>
+              </Link>
 
-              <a href="#" className="transition hover:text-yellow-400">
+              <span className="h-4 w-px bg-gray-200" />
+
+              <Link
+                href="#"
+                className="text-gray-400 transition-colors hover:text-yellow-500"
+              >
                 Terms & Conditions
-              </a>
+              </Link>
             </div>
           </div>
         </div>
