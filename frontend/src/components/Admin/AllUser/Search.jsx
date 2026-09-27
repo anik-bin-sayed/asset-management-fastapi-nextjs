@@ -1,4 +1,11 @@
-const Search = ({ searchTerm, handleSearchChange, pagination, users }) => {
+const Search = ({
+  searchTerm,
+  handleSearchChange,
+  pagination,
+  users,
+  setSearch,
+  onSearch,
+}) => {
   return (
     <div className="mb-4 flex flex-col items-center gap-4">
       <input

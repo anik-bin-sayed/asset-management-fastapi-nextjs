@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import UserTableLoader from "./UserTableLoader";
 
-const UserTable = ({ users, isLoading }) => {
+const UserTable = ({ users, isLoading, openRoleModal }) => {
   if (isLoading) return <UserTableLoader />;
   return (
     <div className="overflow-x-auto shadow-md rounded-lg">

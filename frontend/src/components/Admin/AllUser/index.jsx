@@ -53,13 +53,19 @@ const AllUser = ({
       {/* Search Bar */}
       <Search
         searchTerm={searchTerm}
-        handleSearchChange={handleRoleChange}
+        setSearch={setSearch}
+        handleSearchChange={handleSearchChange}
         pagination={pagination}
         users={users}
+        onSearch={onSearch}
       />
 
       {/* Users Table */}
-      <UserTable users={users} isLoading={isLoading} />
+      <UserTable
+        users={users}
+        isLoading={isLoading}
+        openRoleModal={openRoleModal}
+      />
 
       {/* Pagination Controls */}
       <Pagination page={page} goToPage={goToPage} total_pages={total_pages} />

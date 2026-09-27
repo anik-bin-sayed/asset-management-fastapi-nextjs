@@ -10,13 +10,11 @@ const Page = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const { data, isLoading, isError } = useAllUsersQuery({
+  const { data, isLoading, isError, refetch } = useAllUsersQuery({
     page,
     limit: 30,
     search,
   });
-
-  console.log(search);
 
   // const [updateRole, { isLoading: isUpdating }] = useUpdateUserRoleMutation();
 
@@ -29,7 +27,7 @@ const Page = () => {
     setPage(newPage);
   };
 
-  const handleRoleChange = async (userId, newRole) => {
+  const handleRoleChange = async () => {
     try {
       refetch();
     } catch (error) {
@@ -37,8 +35,6 @@ const Page = () => {
     }
   };
 
-  // Loading and error states
-  // if (isLoading) return <Loader />;
   if (isError) return <div>Error occurred while fetching users.</div>;
 
   return (
