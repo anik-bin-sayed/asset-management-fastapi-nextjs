@@ -9,7 +9,6 @@ const AllUser = ({
   users = [],
   pagination = {},
   onSearch,
-  setSearch,
   onPageChange,
   onRoleChange,
   isLoading,
@@ -51,7 +50,6 @@ const AllUser = ({
       {/* Search Bar */}
       <Search
         searchTerm={searchTerm}
-        setSearch={setSearch}
         handleSearchChange={handleSearchChange}
         pagination={pagination}
         users={users}

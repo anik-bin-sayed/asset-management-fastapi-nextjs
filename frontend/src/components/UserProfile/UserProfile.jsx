@@ -17,6 +17,7 @@ import {
   FaUser,
   FaVenusMars,
 } from "react-icons/fa6";
+
 import {
   FaBirthdayCake,
   FaCalendarAlt,
@@ -27,25 +28,25 @@ import {
   FaTimes,
   FaTimesCircle,
 } from "react-icons/fa";
-import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+
 import Loader from "../../utils/Loader";
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+import UserProfileLoader from "../Profile/UserProfileLoader";
+import InfoCard from "../Profile/InfoCard";
+import PreviewImage from "../Profile/PreviewImage";
 
 const UserProfile = ({ userId }) => {
   const [copied, setCopied] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const {
-    data: profile,
-    isLoading,
-    isError,
-  } = useUserProfileQuery({ user_id: userId });
 
-  const {
-    data: UserProfile,
-    refetch,
-    isLoading: UserProfileLoading,
-  } = useGetProfileQuery(undefined, {
-    refetchOnMountOrArgChange: true,
+  const { data: profile, isLoading } = useUserProfileQuery({
+    user_id: userId,
   });
+
+  const { data: currentUser, isLoading: currentUserLoading } =
+    useGetProfileQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
 
   const copyId = async () => {
     try {
@@ -61,203 +62,275 @@ const UserProfile = ({ userId }) => {
     }
   };
 
-  if (UserProfileLoading || isLoading) return <Loader />;
+  if (currentUserLoading || isLoading) {
+    return <UserProfileLoader />;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ProfileNavbar profile={UserProfile} />
+    <div className="min-h-screen bg-slate-50">
+      {/* Navbar */}
+      <ProfileNavbar profile={currentUser} />
 
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <MobileSectionTopBar />
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Card */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:sticky lg:top-24 h-fit">
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                {/* Profile Image */}
-                <Image
-                  src={profile?.avatar || "/images/default.jpg"}
-                  alt="Profile"
-                  width={120}
-                  height={120}
-                  onClick={() => setPreviewOpen(true)}
-                  className="h-32 w-32 rounded-full object-cover border-2 border-gray-300 cursor-pointer transition hover:scale-105"
-                />
-              </div>
-              <h2 className="mt-4 text-2xl font-bold">{profile?.name}</h2>
-              {/* country */}
-              <CountryFlag profile={profile} />
-              <p className="text-sm text-gray-500">{profile?.email}</p>
-              <span className="mt-4 rounded-full bg-yellow-100 px-4 py-1 text-sm font-medium text-yellow-700 capitalize">
-                {profile?.role}
-              </span>
-            </div>
-            <div className="mt-6 text-center">
-              {profile?.bio && (
-                <p className="text-sm text-gray-600">{profile.bio}</p>
-              )}
-            </div>
-          </div>
 
-          {/* Right Card */}
-          <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm lg:max-h-[calc(100vh-140px)] overflow-y-auto">
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <h3 className="text-xl font-bold">Account Information</h3>
+        <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
+          {/* LEFT PROFILE CARD */}
 
-              <button
-                onClick={copyId}
-                className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-2 text-sm transition hover:bg-gray-100 cursor-pointer"
-              >
-                <span className="max-w-45 truncate">ID: {profile?.id}</span>
+          <aside className="h-fit lg:sticky lg:top-24">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="px-6 pb-7 pt-8">
+                <div className="flex flex-col items-center text-center">
+                  {/* Profile Image */}
+                  <button
+                    type="button"
+                    onClick={() => setPreviewOpen(true)}
+                    className="group relative cursor-pointer"
+                  >
+                    <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-lg ring-1 ring-slate-200">
+                      <Image
+                        src={profile?.avatar || "/images/default.jpg"}
+                        alt={`${profile?.name || "User"} profile`}
+                        fill
+                        sizes="128px"
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                      />
 
-                {copied ? (
-                  <FaCheck className="text-green-500" />
-                ) : (
-                  <FaCopy className="text-gray-500" />
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition duration-300 group-hover:bg-black/30">
+                        <span className="text-sm font-medium text-white opacity-0 transition group-hover:opacity-100">
+                          View
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Name */}
+                  <h1 className="mt-5 text-2xl font-bold tracking-tight text-slate-900">
+                    {profile?.name}
+                  </h1>
+
+                  {/* Country */}
+                  <div className="mt-2">
+                    <CountryFlag profile={profile} />
+                  </div>
+
+                  {/* Email */}
+                  <p className="mt-2 max-w-full truncate px-2 text-sm text-slate-500">
+                    {profile?.email}
+                  </p>
+
+                  {/* Role */}
+                  <span className="mt-4 inline-flex items-center rounded-full bg-yellow-50 px-4 py-1.5 text-xs font-semibold capitalize text-yellow-700 ring-1 ring-yellow-200">
+                    {profile?.role}
+                  </span>
+                </div>
+
+                {/* Bio */}
+                {profile?.bio && (
+                  <div className="mt-7 border-t border-slate-100 pt-6">
+                    <p className="text-center text-sm leading-6 text-slate-600">
+                      {profile.bio}
+                    </p>
+                  </div>
                 )}
-              </button>
+              </div>
+
+              {/* Account Status */}
+              <div className="grid grid-cols-2 border-t border-slate-100 bg-slate-50">
+                <div className="px-4 py-4 text-center">
+                  <p className="text-xs font-medium text-slate-500">
+                    Verification
+                  </p>
+
+                  <div className="mt-1 flex items-center justify-center gap-1.5">
+                    {profile?.is_verified ? (
+                      <>
+                        <FaCheckCircle className="text-emerald-500" size={13} />
+
+                        <span className="text-sm font-semibold text-emerald-600">
+                          Verified
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <FaTimesCircle className="text-slate-400" size={13} />
+
+                        <span className="text-sm font-semibold text-slate-500">
+                          Unverified
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="border-l border-slate-200 px-4 py-4 text-center">
+                  <p className="text-xs font-medium text-slate-500">Joined</p>
+
+                  <p className="mt-1 text-sm font-semibold text-slate-700">
+                    {profile?.created_at
+                      ? new Date(profile.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            year: "numeric",
+                          },
+                        )
+                      : "-"}
+                  </p>
+                </div>
+              </div>
             </div>
+          </aside>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              <InfoCard icon={<FaUser />} title="Name" value={profile?.name} />
+          {/* RIGHT INFORMATION CARD */}
 
-              <InfoCard
-                icon={<FaEnvelope />}
-                title="Email"
-                value={profile?.email}
-              />
+          <section className="min-w-0">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              {/* Header */}
+              <div className="border-b border-slate-100 px-5 py-5 sm:px-7">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold tracking-tight text-slate-900">
+                      Account Information
+                    </h2>
 
-              <InfoCard
-                icon={<FaPhoneAlt />}
-                title="Phone"
-                value={profile?.phone || "-"}
-              />
+                    <p className="mt-1 text-sm text-slate-500">
+                      Personal and account details
+                    </p>
+                  </div>
 
-              <InfoCard
-                icon={<FaVenusMars />}
-                title="Gender"
-                value={profile?.gender || "-"}
-              />
+                  {/* Copy ID */}
+                  <button
+                    type="button"
+                    onClick={copyId}
+                    className="flex max-w-full cursor-pointer items-center gap-2 self-start rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm transition hover:border-slate-300 hover:bg-slate-100 sm:self-auto"
+                  >
+                    <span className="max-w-44 truncate font-medium text-slate-600">
+                      ID: {profile?.id}
+                    </span>
 
-              <InfoCard
-                icon={<FaBirthdayCake />}
-                title="Date of Birth"
-                value={profile?.date_of_birth || "-"}
-              />
+                    {copied ? (
+                      <FaCheck
+                        className="shrink-0 text-emerald-500"
+                        size={13}
+                      />
+                    ) : (
+                      <FaCopy className="shrink-0 text-slate-400" size={13} />
+                    )}
+                  </button>
+                </div>
+              </div>
 
-              <InfoCard
-                icon={<FaMapMarkerAlt />}
-                title="Address"
-                value={profile?.address || "-"}
-              />
+              {/* Information Grid */}
+              <div className="p-5 sm:p-7">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <InfoCard
+                    icon={<FaUser />}
+                    title="Name"
+                    value={profile?.name}
+                  />
 
-              <InfoCard
-                icon={<FaGlobe />}
-                title="Country"
-                value={profile?.country || "-"}
-              />
+                  <InfoCard
+                    icon={<FaEnvelope />}
+                    title="Email"
+                    value={profile?.email}
+                  />
 
-              <InfoCard
-                icon={<FaGlobe />}
-                title="Website"
-                value={profile?.website || "-"}
-              />
+                  <InfoCard
+                    icon={<FaPhoneAlt />}
+                    title="Phone"
+                    value={profile?.phone || "-"}
+                  />
 
-              <InfoCard
-                icon={<FaGithub />}
-                title="GitHub"
-                value={profile?.github || "-"}
-              />
+                  <InfoCard
+                    icon={<FaVenusMars />}
+                    title="Gender"
+                    value={profile?.gender || "-"}
+                  />
 
-              <InfoCard
-                icon={<FaLinkedin />}
-                title="LinkedIn"
-                value={profile?.linkedin || "-"}
-              />
+                  <InfoCard
+                    icon={<FaBirthdayCake />}
+                    title="Date of Birth"
+                    value={profile?.date_of_birth || "-"}
+                  />
 
-              <InfoCard
-                icon={<FaShieldAlt />}
-                title="Role"
-                value={profile?.role}
-              />
+                  <InfoCard
+                    icon={<FaMapMarkerAlt />}
+                    title="Address"
+                    value={profile?.address || "-"}
+                  />
 
-              <InfoCard
-                icon={
-                  profile?.is_verified ? <FaCheckCircle /> : <FaTimesCircle />
-                }
-                title="Verification"
-                value={profile?.is_verified ? "Verified" : "Not Verified"}
-              />
+                  <InfoCard
+                    icon={<FaGlobe />}
+                    title="Country"
+                    value={profile?.country || "-"}
+                  />
 
-              <InfoCard
-                icon={<FaCalendarAlt />}
-                title="Joined"
-                value={
-                  profile?.created_at
-                    ? new Date(profile.created_at).toLocaleDateString()
-                    : "-"
-                }
-              />
+                  <InfoCard
+                    icon={<FaGlobe />}
+                    title="Website"
+                    value={profile?.website || "-"}
+                  />
+
+                  <InfoCard
+                    icon={<FaGithub />}
+                    title="GitHub"
+                    value={profile?.github || "-"}
+                  />
+
+                  <InfoCard
+                    icon={<FaLinkedin />}
+                    title="LinkedIn"
+                    value={profile?.linkedin || "-"}
+                  />
+
+                  <InfoCard
+                    icon={<FaShieldAlt />}
+                    title="Role"
+                    value={profile?.role || "-"}
+                  />
+
+                  <InfoCard
+                    icon={
+                      profile?.is_verified ? (
+                        <FaCheckCircle className="text-emerald-500" />
+                      ) : (
+                        <FaTimesCircle className="text-slate-400" />
+                      )
+                    }
+                    title="Verification"
+                    value={profile?.is_verified ? "Verified" : "Not Verified"}
+                  />
+
+                  <InfoCard
+                    icon={<FaCalendarAlt />}
+                    title="Joined"
+                    value={
+                      profile?.created_at
+                        ? new Date(profile.created_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            },
+                          )
+                        : "-"
+                    }
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
+
+      {/* IMAGE PREVIEW MODAL */}
 
       {previewOpen && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          {/* Close */}
-          <button
-            onClick={() => setPreviewOpen(false)}
-            className="absolute top-6 right-6 rounded-full bg-white p-3 shadow-lg hover:bg-gray-100 cursor-pointer"
-          >
-            <FaTimes />
-          </button>
-
-          <Image
-            src={profile?.avatar || "/default-profile.png"}
-            alt="Profile"
-            width={700}
-            height={700}
-            className="max-h-[90vh] max-w-[90vw] rounded-2xl object-contain"
-          />
-        </div>
+        <PreviewImage setPreviewOpen={setPreviewOpen} profile={profile} />
       )}
-    </div>
-  );
-};
-
-const InfoCard = ({ icon, title, value }) => {
-  const isUrl = (text) => {
-    if (!text || text === "-") return false;
-
-    try {
-      new URL(text);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  return (
-    <div className="rounded-xl border border-gray-100 p-5 transition">
-      <div className="mb-3 text-xl text-black">{icon}</div>
-
-      <p className="text-sm text-gray-500">{title}</p>
-
-      <h4 className="mt-1 font-semibold text-gray-800 break-all">
-        {isUrl(value) ? (
-          <a
-            href={value}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            {value}
-          </a>
-        ) : (
-          value
-        )}
-      </h4>
     </div>
   );
 };

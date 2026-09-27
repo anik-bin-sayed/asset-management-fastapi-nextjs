@@ -14,7 +14,9 @@ export default function LayoutWrapper({ children }) {
 
   const hideFooter =
     pathname.startsWith("/admin/manage-course") ||
-    pathname.startsWith("/admin/users");
+    pathname.startsWith("/admin/users") ||
+    pathname.startsWith("/admin/profile") ||
+    pathname.startsWith("/profile");
 
   return (
     <>
