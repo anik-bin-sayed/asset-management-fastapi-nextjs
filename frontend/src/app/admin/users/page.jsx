@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 
-import Loader from "../../../utils/Loader";
 import AllUser from "../../../components/Admin/AllUser";
 import { useAllUsersQuery } from "../../../lib/features/profile/profileApi";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("search") || "";
+  const page = Number(searchParams.get("page")) || 1;
 
   const { data, isLoading, isError, refetch } = useAllUsersQuery({
     page,
@@ -42,7 +44,7 @@ const Page = () => {
       users={data?.users || []}
       pagination={data?.pagination || {}}
       onSearch={handleSearch}
-      setSearch={setSearch}
+      // setSearch={setSearch}
       onPageChange={handlePageChange}
       onRoleChange={handleRoleChange}
       isLoading={isLoading}

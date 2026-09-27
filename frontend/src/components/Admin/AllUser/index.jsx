@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useState } from "react";
+
 import RoleChangeModal from "./RoleChangeModal";
 import Pagination from "./Pagination";
 import UserTable from "./UserTable";
@@ -22,7 +21,6 @@ const AllUser = ({
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearch(value);
   };
 
   const goToPage = (page) => {
