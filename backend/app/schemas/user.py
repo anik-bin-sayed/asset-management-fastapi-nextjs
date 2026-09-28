@@ -14,6 +14,16 @@ class CheckEmailSchema(BaseModel):
     email: EmailStr
 
 
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str

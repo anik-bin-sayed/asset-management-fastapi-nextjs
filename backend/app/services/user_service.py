@@ -30,7 +30,7 @@ class UserService:
             )
 
         verification_code = generate_verification_code()
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=10)
+        expires_at = datetime.utcnow() + timedelta(minutes=10)
 
         user = User(
             name=data.name,
@@ -49,6 +49,45 @@ class UserService:
         send_verification_email(user.email, verification_code)
 
         return {"message": "Please check your email to verify"}
+
+    @staticmethod
+    def verify_email(db, data):
+        user = UserRepository.get_by_email(db, data.email)
+
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if user.is_verified:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already verified",
+            )
+
+        if user.verification_code != data.code:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid verification code",
+            )
+
+        if (
+            not user.verification_code_expires_at
+            or user.verification_code_expires_at < datetime.utcnow()
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Verification code expired",
+            )
+
+        user.is_verified = True
+        user.verification_code = None
+        user.verification_code_expires_at = None
+
+        db.commit()
+        db.refresh(user)
+
+        return {
+            "message": "Email verified successfully",
+        }
 
     # Login
     @staticmethod

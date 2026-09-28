@@ -30,14 +30,32 @@ def register(
     )
 
 
+@router.post("/verify-email")
+def verify_email(
+    data: VerifyEmailRequest,
+    db: Session = Depends(get_db),
+):
+    return UserService.verify_email(
+        db,
+        data,
+    )
+
+
 @router.post("/check-email")
 async def check_email(data: CheckEmailSchema, db: Session = Depends(get_db)):
     user = UserRepository.get_by_email(
         db,
         data.email,
     )
+
     if not user:
         return {"exists": False, "message": "No account found with this email."}
+
+    if not user.is_verified:
+        raise HTTPException(
+            status_code=403,
+            detail="Please verify your email first",
+        )
 
     return {"exists": True, "message": "Email exists."}
 
