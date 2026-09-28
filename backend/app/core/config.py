@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str
     CLOUDINARY_API_SECRET: str
 
+    SMTP_PASSWORD: str
+    SMTP_GMAIL: str
+
     SSLCOMMERZ_STORE_ID: str
     SSLCOMMERZ_STORE_PASSWORD: str
 
@@ -42,8 +45,7 @@ class Settings(BaseSettings):
             )
 
         return (
-            "https://securepay.sslcommerz.com/"
-            "validator/api/validationserverAPI.php"
+            "https://securepay.sslcommerz.com/" "validator/api/validationserverAPI.php"
         )
 
     model_config = SettingsConfigDict(env_file=".env")

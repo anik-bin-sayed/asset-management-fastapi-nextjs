@@ -43,6 +43,15 @@ class User(Base):
         default=False,
     )
 
+    verification_code: Mapped[str | None] = mapped_column(
+        String(6),
+        nullable=True,
+    )
+    verification_code_expires_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+    )
+
     phone: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,

@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
@@ -6,6 +8,9 @@ from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.utils.password import hash_password, verify_password
 from app.utils.jwt import create_access_token, create_refresh_token, decode_token
+from app.utils.generate_verification_code import generate_verification_code
+
+from app.services.email_service import send_verification_email
 
 
 class UserService:
@@ -24,16 +29,26 @@ class UserService:
                 detail="Email already exists",
             )
 
+        verification_code = generate_verification_code()
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=10)
+
         user = User(
             name=data.name,
             email=data.email,
             password=hash_password(data.password),
+            is_verified=False,
+            verification_code=verification_code,
+            verification_code_expires_at=expires_at,
         )
 
-        return UserRepository.create(
+        user = UserRepository.create(
             db,
             user,
         )
+
+        send_verification_email(user.email, verification_code)
+
+        return {"message": "Please check your email to verify"}
 
     # Login
     @staticmethod
