@@ -48,7 +48,7 @@ class UserService:
 
         send_verification_email(user.email, verification_code)
 
-        return {"message": "Please check your email to verify"}
+        return {"message": "Please check your email to verify", "user": user}
 
     @staticmethod
     def verify_email(db, data):
